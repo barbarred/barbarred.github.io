@@ -1,0 +1,70 @@
+---
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import '@fontsource-variable/onest'
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { description, title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description}/>
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body class="bg-slate-950">
+		<Header/>
+		<slot />
+		<Footer/>
+	</body>
+</html>
+<style is:global>
+	@font-face {
+		font-family: 'MpoFont';
+		src: url('../../public/Fonts/font-mpo.otf');
+		font-weight: normal;
+		font-style: normal;
+		font-display: swap;
+	}
+	@font-face {
+		font-family: 'Geist';
+		src: url('../../public/Fonts/GeistMonoVF.woff');
+		font-weight: normal;
+		font-style: normal;
+		font-display: swap;
+	}
+	:root {
+		color-scheme: dark;
+	}
+	html {
+		font-family: "Geist", monospace;
+		letter-spacing: 0.015em;
+		scroll-behavior: smooth;
+		
+	}
+	body {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	@media(prefers-reduce-motion: reduce){
+		html{
+			scroll-behavior: auto;
+		}
+	}
+	@media(max-width: 450px){
+		.badge{
+			font-size: 0.6rem;
+		}
+	}
+</style>

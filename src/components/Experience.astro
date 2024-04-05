@@ -1,0 +1,139 @@
+---
+import ExperienceItem from "./ExperienceItem.astro"
+import Cisco from "./Icons/tecnologias/Cisco.astro"
+import Linux from "./Icons/tecnologias/Linux.astro"
+import LotusNotes from "./Icons/tecnologias/LotusNotes.astro"
+import Wordpress from "./Icons/tecnologias/Wordpress.astro"
+import Sass from "./Icons/tecnologias/Sass.astro"
+import Jquery from "./Icons/tecnologias/Jquery.astro"
+import JavaScript from "./Icons/tecnologias/JavaScript.astro"
+import Css from "./Icons/tecnologias/Css.astro"
+import Html from "./Icons/tecnologias/Html.astro"
+import Python from "./Icons/tecnologias/Python.astro"
+import Bootstrap from "./Icons/tecnologias/Bootstrap.astro"
+import Django from "./Icons/tecnologias/Django.astro"
+import Aws from "./Icons/tecnologias/Aws.astro"
+import Heroku from "./Icons/tecnologias/Heroku.astro"
+import React from "./Icons/tecnologias/React.astro"
+import Tailwind from "./Icons/tecnologias/Tailwind.astro"
+import Node from "./Icons/tecnologias/Node.astro"
+import AstroIcon from "./Icons/tecnologias/AstroIcon.astro"
+import Vite from "./Icons/tecnologias/Vite.astro"
+import Npm from "./Icons/tecnologias/Npm.astro"
+import Git from "./Icons/tecnologias/Git.astro"
+import Sql from "./Icons/tecnologias/Sql.astro"
+import TypeScript from "./Icons/tecnologias/TypeScript.astro"
+import OpenIA from "./Icons/tecnologias/OpenIa.astro"
+
+const TECNOLOGIAS = {
+    CISCO: {
+        icono: Cisco,
+    },
+    LINUX: {
+        icono: Linux,
+    },
+    LOTUS: {
+        icono: LotusNotes,
+    },
+    WORDPRESS: {
+        icono: Wordpress,
+    },
+    SASS: {
+        icono: Sass,
+    },
+    JQUERY: {
+        icono: Jquery,
+    },
+    JAVASCRIPT: {
+        icono: JavaScript,
+    },
+    CSS: {
+        icono: Css,
+    },
+    HTML: {
+        icono: Html,
+    },
+    PYTHON: {
+        icono: Python,
+    },
+    BOOTSTRAP: {
+        icono: Bootstrap,
+    },
+    DJANGO: {
+        icono: Django,
+    },
+    AWS: {
+        icono: Aws,
+    },
+    HEROKU: {
+        icono: Heroku,
+    },
+    REACT: {
+        icono: React,
+    },
+    TAILWIND: {
+        icono: Tailwind,
+    },
+    NODE: {
+        icono: Node,
+    },
+    ASTRO: {
+        icono: AstroIcon,
+    },
+    VITE: {
+        icono: Vite,
+    },
+    NPM: {
+        icono: Npm,
+    },
+    GIT: {
+        icono: Git,
+    },
+    SQL: {
+        icono: Sql,
+    },
+    TYPESCRIPT: {
+        icono: TypeScript,
+    },
+    OPENIA: {
+        icono: OpenIA,
+    }
+}
+
+const EXPERIENCE = [
+    {
+        date: 'Periodo 2021 - Actualmente',
+        title: 'WebDev FullStack JavaScript - Autónomo',
+        description: 'Actualmente me estoy formando como FullStack en JavaScript, para crear y aportar valor con las nuevas técnologias disponibles en la industria para el desarrollo web robusto y escalable.',
+        tecnologias: [TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.TYPESCRIPT, TECNOLOGIAS.REACT, TECNOLOGIAS.ASTRO, TECNOLOGIAS.VITE, TECNOLOGIAS.CSS, TECNOLOGIAS.TAILWIND, TECNOLOGIAS.NODE, TECNOLOGIAS.NPM, TECNOLOGIAS.GIT, TECNOLOGIAS.SQL, TECNOLOGIAS.OPENIA],
+    },
+    {
+        date: 'Periodo 2019 - 2021',
+        title: 'WebDev FullStack Python - Autónomo',
+        description: `Desarrollé desde cero una aplicacion web como proyecto personal, la cual consistía en mostrar de manera amigable las giras de artistas de música electronica. La aplicación estuvo online durante un periodo, pero por falta de financiamiento el proyecto se encuenta offline.`,
+        tecnologias: [TECNOLOGIAS.PYTHON, TECNOLOGIAS.DJANGO, TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.CSS, TECNOLOGIAS.BOOTSTRAP, TECNOLOGIAS.AWS, TECNOLOGIAS.HEROKU],
+    },
+    {
+        date: 'Periodo 2014 - 2019',
+        title: 'WebDev Wordpress - Autónomo',
+        description: 'Me dediqué a crear sitios web para diferentes clientes de distintos sectores e industrias, basado en el gestor de contenido Wordpress, utilizando variedades de templates, bibliotecas y plugins.',
+        tecnologias: [TECNOLOGIAS.WORDPRESS, TECNOLOGIAS.SASS, TECNOLOGIAS.JQUERY, TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.CSS, TECNOLOGIAS.HTML]
+    },
+    {
+        date: 'Periodo 2008 - 2013',
+        title: 'Administrador de Redes - 3M Venezuela',
+        description: 'Encargado de mantener el hardware, los sitemas de redes de datos, voz y video. Brindar soporte técnico en redes a clientes internos y/o externos. Realizar cambios de configuraciones de diversos equipos como: routers, switches, call manager system, access point, servers, etc. Despliegue de proyectos de redes. Gestionar la implementación de soluciones de red y de seguridad ( Firewalls, VPN, IPSec, SSL, Proxy Servers, etc ).',
+        tecnologias: [TECNOLOGIAS.CISCO, TECNOLOGIAS.LINUX, TECNOLOGIAS.LOTUS],
+    }
+]
+---
+
+<ol class="relative border-s border-gray-200 dark:border-gray-700 ml-3">
+    {
+        EXPERIENCE.map((props) => (
+        <li class="">
+            <ExperienceItem {...props}/>
+        </li>
+        ))
+    }
+</ol>

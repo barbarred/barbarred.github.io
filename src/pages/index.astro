@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Badge from '../components/Badge.astro';
+import SectionContainer from '../components/SectionContainer.astro'
+import LinkedInIcon from '../components/Icons/LinkedIn.astro'
+import GitHubIcon from '../components/Icons/GitHub.astro'
+import PillsIcons from '../components/PillsIcons.astro'
+import PillsMpoIcons from '../components/PillsMpo.astro'
+import MailIcon from '../components/Icons/Mail.astro'
+import BriefCase from '../components/Icons/BriefCase.astro'
+import Experience from '../components/Experience.astro'
+
+
+---
+
+<Layout title="Portfolio de Ricardo - Informático egresado en 2008" description='Apasionado en crear valor'>
+	<main class="container md:px-4 px-6">
+		<SectionContainer id="top" class="mt-14 md:mt-28 mb-14 md:mb-28">
+			<img class="rounded-full size-12 mb-5" src="https://avatars.githubusercontent.com/u/20890538?v=4" alt="logo-rorri">
+			<h1 class="text-white lg:text-4xl font-bold flex flex-row gap-x-4 pb-6">Aloha! soy Ricardo 
+			<a href="https://www.linkedin.com/in/rorri/" class="flex justify-center items-center">
+			<Badge>Disponible para trabajar</Badge>
+			</a>
+			</h1>
+			<h2 class="text-pretty text-sm md:text-base">
+				Informático titulado en el 2008 con +6 años de experiencia en la administración de redes e infraestructura en el ámbito empresarial, 
+				+12 años aprendiendo técnologia y creando soluciones de manera autónoma. Founder de <PillsMpoIcons/> una pequeña tienda de 
+				golosinas que ofrece productos innovadores en el mercado Chileno. Siempre buscando ideas y maneras de resolver problemas que surgen en la humanidad.
+			</h2>
+			<nav class="flex gap-3 mt-4 flex-wrap">
+				<PillsIcons href="https://www.linkedin.com/in/rorri/">
+					<LinkedInIcon class="size-4 md:size-6"/>
+					LinkedIn
+				</PillsIcons>
+				<PillsIcons href="https://github.com/barbarred">
+					<GitHubIcon class="size-4 md:size-6"/>
+					GitHub
+				</PillsIcons>
+				<PillsIcons href="mailto:ricardo.rjose@gmail.com">
+					<MailIcon class="size-4 md:size-6"/>
+					ricardo.rjose@gmail.com
+				</PillsIcons>
+			</nav>
+		</SectionContainer>
+
+		<SectionContainer id="experiencia">
+			<h2 class="text-xl md:text-2xl font-semibold flex gap-x-2 items-center mb-8">
+			<BriefCase class="size-6"/>
+			Experiencia
+			</h2>
+			<Experience />
+		</SectionContainer>
+	</main>
+</Layout>
+
