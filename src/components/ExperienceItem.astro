@@ -21,7 +21,7 @@ const { date, title, description, tecnologias} = Astro.props
     <p class="mt-2 mb-6 text-sm md:text-base font-normal text-white dark:text-gray-400">{description}</p>
     <h3 class="text-xs md:text-sm font-semibold text-gray-400 mb-4">TECNOLOGÍAS</h3>
     <ul class="flex">
-        {tecnologias?.map((tecno) => (
+        {tecnologias?.map((tecno: { icono: any }) => (
             <li class="mr-2 md:mr-4" >
                 <tecno.icono class="size-5 md:size-6"/>
             </li>
