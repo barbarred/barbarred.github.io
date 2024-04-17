@@ -24,6 +24,7 @@ import Git from "./Icons/tecnologias/Git.astro"
 import Sql from "./Icons/tecnologias/Sql.astro"
 import TypeScript from "./Icons/tecnologias/TypeScript.astro"
 import OpenIA from "./Icons/tecnologias/OpenIa.astro"
+import Project from "../components/Project.astro"
 
 const TECNOLOGIAS = {
     CISCO: {
@@ -100,6 +101,12 @@ const TECNOLOGIAS = {
     }
 }
 
+const PROJECT = {
+    proyecto: {
+        nameProject: Project,
+    },
+}
+
 const EXPERIENCE = [
     {
         date: 'Periodo 2021 - Actualmente',
@@ -110,8 +117,9 @@ const EXPERIENCE = [
     {
         date: 'Periodo 2019 - 2021',
         title: 'WebDev FullStack Python - Autónomo',
-        description: `Desarrollé desde cero una aplicación web como proyecto personal, la cual consistía en mostrar de manera amigable las giras de artistas de música electronica. La aplicación estuvo online durante un periodo, pero por falta de financiamiento el proyecto se encuentra offline.`,
+        description: `Desarrollé desde cero una aplicación web como proyecto personal, la cual consistía en mostrar de manera amigable las giras de artistas de música electronica. La aplicación estuvo online durante un periodo, pero por falta de financiamiento el proyecto se encuentra offline.  `,
         tecnologias: [TECNOLOGIAS.PYTHON, TECNOLOGIAS.DJANGO, TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.CSS, TECNOLOGIAS.BOOTSTRAP, TECNOLOGIAS.AWS, TECNOLOGIAS.HEROKU],
+        project: [PROJECT.proyecto]
     },
     {
         date: 'Periodo 2014 - 2019',
@@ -132,7 +140,7 @@ const EXPERIENCE = [
     {
         EXPERIENCE.map((props) => (
         <li class="">
-            <ExperienceItem {...props}/>
+            <ExperienceItem {...props} />
         </li>
         ))
     }

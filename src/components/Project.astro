@@ -1,0 +1,23 @@
+
+<div class="mb-10">
+    <h3 class="text-xs md:text-sm font-semibold text-gray-400 mb-4">PROYECTO</h3>
+    <div class="flex gap-x-9 mb-5">
+        <h2>Coming Gigs</h2>
+        <button class="demobtn">ver proyecto</button>
+    </div>
+    <video  muted="muted" autoplay="false" class="demo hidden" src="/public/demo-coming-gigs-new.mp4"></video>
+</div>
+
+<script>
+    
+    const show: HTMLButtonElement | null = document.querySelector(".demobtn")
+    if (show) {
+    show.addEventListener("click", () => {
+        const demo: HTMLButtonElement | null = document.querySelector(".demo")
+        if(demo){
+            demo.style.display = "flex"
+        }
+    });
+}
+
+</script>
