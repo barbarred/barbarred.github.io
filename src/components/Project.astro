@@ -1,23 +1,66 @@
+---
+import Badge from '../components/Badge.astro';
+---
 
 <div class="mb-10">
     <h3 class="text-xs md:text-sm font-semibold text-gray-400 mb-4">PROYECTO</h3>
-    <div class="flex gap-x-9 mb-5">
+    <div class="flex mb-5 gap-x-20">
         <h2>Coming Gigs</h2>
-        <button class="demobtn">ver proyecto</button>
+        <button class="demobtn font-semibold"><Badge>ver proyecto</Badge></button>
     </div>
-    <video  muted="muted" autoplay="false" class="demo hidden" src="/demo-coming-gigs-new.mp4"></video>
+    <div class="demo-container">
+        <div class="demo-modal">
+        <div class="flex flex-col mb-3">
+            <button class="text-black self-end btn-modal text-base font-semibold">cerrar</button>
+        </div>
+        <video controls muted="muted" class="w-full" src="/demo-coming-gigs-new.mp4"></video>
+        </div>
+    </div>
 </div>
 
+<style is:global>
+    .demo-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #111111bd;
+        display: flex;
+        opacity: 0;
+        pointer-events: none;
+
+    }
+    .demo-modal{
+        margin: auto;
+        width: 80%;
+        background-color: #FFF;
+        border-radius: 6px;
+        padding: 1em
+    }
+    .modal--show{
+        opacity: 1;
+        pointer-events: inherit;
+    }
+</style>
 <script>
     
     const show: HTMLButtonElement | null = document.querySelector(".demobtn")
     if (show) {
     show.addEventListener("click", () => {
-        const demo: HTMLButtonElement | null = document.querySelector(".demo")
+        const demo: HTMLButtonElement | null = document.querySelector(".demo-container")
         if(demo){
-            demo.style.display = "flex"
-        }
-    });
-}
-
+            demo.classList.add('modal--show')
+            }
+        });
+    }
+    const hidde: HTMLButtonElement | null = document.querySelector(".btn-modal")
+    if (hidde) {
+    hidde.addEventListener("click", () => {
+        const demo: HTMLButtonElement | null = document.querySelector(".demo-container")
+        if(demo){
+            demo.classList.remove('modal--show')
+            }
+        });
+    }
 </script>
