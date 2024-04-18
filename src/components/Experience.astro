@@ -25,6 +25,12 @@ import Sql from "./Icons/tecnologias/Sql.astro"
 import TypeScript from "./Icons/tecnologias/TypeScript.astro"
 import OpenIA from "./Icons/tecnologias/OpenIa.astro"
 import Project from "../components/Project.astro"
+import HP from "./Icons/tecnologias/Hp.astro"
+import Dell from "./Icons/tecnologias/Dell.astro"
+import TRESM from "./Icons/tecnologias/3m.astro"
+import Server from "./Icons/tecnologias/Server.astro"
+import MYSQL from "./Icons/tecnologias/MySql.astro"
+import POSTGRES from "./Icons/tecnologias/Postgres.astro"
 
 const TECNOLOGIAS = {
     CISCO: {
@@ -98,6 +104,24 @@ const TECNOLOGIAS = {
     },
     OPENIA: {
         icono: OpenIA,
+    },
+    HP: {
+        icono: HP,
+    },
+    DELL: {
+        icono: Dell,
+    },
+    MMM: {
+        icono: TRESM,
+    },
+    SERVER: {
+        icono: Server,
+    },
+    MYSQL: {
+        icono: MYSQL,
+    },
+    POSTGRES: {
+        icono: POSTGRES,
     }
 }
 
@@ -112,13 +136,13 @@ const EXPERIENCE = [
         date: 'Periodo 2021 - Actualmente',
         title: 'WebDev FullStack JavaScript - Autónomo',
         description: 'Actualmente me estoy formando como FullStack en JavaScript, para crear y aportar valor con las nuevas tecnologías disponibles en la industria para el desarrollo web robusto y escalable.',
-        tecnologias: [TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.TYPESCRIPT, TECNOLOGIAS.REACT, TECNOLOGIAS.ASTRO, TECNOLOGIAS.VITE, TECNOLOGIAS.CSS, TECNOLOGIAS.TAILWIND, TECNOLOGIAS.NODE, TECNOLOGIAS.NPM, TECNOLOGIAS.GIT, TECNOLOGIAS.SQL, TECNOLOGIAS.OPENIA],
+        tecnologias: [TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.TYPESCRIPT, TECNOLOGIAS.REACT, TECNOLOGIAS.ASTRO, TECNOLOGIAS.VITE, TECNOLOGIAS.CSS, TECNOLOGIAS.TAILWIND, TECNOLOGIAS.NODE, TECNOLOGIAS.NPM, TECNOLOGIAS.GIT,TECNOLOGIAS.MYSQL, TECNOLOGIAS.SQL, TECNOLOGIAS.OPENIA],
     },
     {
         date: 'Periodo 2019 - 2021',
         title: 'WebDev FullStack Python - Autónomo',
-        description: `Desarrollé desde cero una aplicación web como proyecto personal, la cual consistía en mostrar de manera amigable las giras de artistas de música electronica. La aplicación estuvo online durante un periodo, pero por falta de financiamiento el proyecto se encuentra offline.  `,
-        tecnologias: [TECNOLOGIAS.PYTHON, TECNOLOGIAS.DJANGO, TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.CSS, TECNOLOGIAS.BOOTSTRAP, TECNOLOGIAS.AWS, TECNOLOGIAS.HEROKU],
+        description: `Desarrollé desde cero una aplicación web como proyecto personal, la cual consistía en mostrar de manera amigable las giras de artistas de música electronica. La aplicación estuvo online durante un tiempo, pero por falta de financiamiento el proyecto se encuentra offline.  `,
+        tecnologias: [TECNOLOGIAS.PYTHON, TECNOLOGIAS.DJANGO, TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.CSS, TECNOLOGIAS.BOOTSTRAP, TECNOLOGIAS.POSTGRES, TECNOLOGIAS.AWS, TECNOLOGIAS.HEROKU],
         project: [PROJECT.proyecto]
     },
     {
@@ -131,7 +155,7 @@ const EXPERIENCE = [
         date: 'Periodo 2008 - 2013',
         title: 'Administrador de Redes - 3M Venezuela',
         description: 'Encargado de mantener el hardware, los sistemas de redes de datos, voz y video. Brindar soporte técnico en redes a clientes internos y/o externos. Realizar cambios de configuraciones de diversos equipos como: routers, switches, call manager system, access point, servers, etc. Despliegue de proyectos de redes. Gestionar la implementación de soluciones de red y de seguridad ( Firewalls, VPN, IPSec, SSL, Proxy Servers, etc ).',
-        tecnologias: [TECNOLOGIAS.CISCO, TECNOLOGIAS.LINUX, TECNOLOGIAS.LOTUS],
+        tecnologias: [TECNOLOGIAS.SERVER, TECNOLOGIAS.CISCO, TECNOLOGIAS.LINUX, TECNOLOGIAS.LOTUS, TECNOLOGIAS.HP, TECNOLOGIAS.DELL, TECNOLOGIAS.MMM],
     }
 ]
 ---
