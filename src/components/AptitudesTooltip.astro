@@ -1,0 +1,125 @@
+---
+const aptitudes = [
+  "Git/GitHub",
+  "CI/CD",
+  "S.O.L.I.D",
+  "TDD",
+  "Six Sigma-green belt"
+];
+---
+
+<div class="relative group">
+  <button class="cursor-pointer md:cursor-default font-semibold md:pointer-events-none" id="aptitudesBtn">Aptitudes</button>
+  
+  <div id="aptitudesContent" 
+    class="hidden absolute z-10 bg-slate-800 text-sm rounded-md
+    md:group-hover:block md:-left-2 md:top-8 md:min-w-[200px] md:pointer-events-none
+    fixed inset-0 left-0 right-0 bg-opacity-50">
+    
+    <div class="fixed top-4 left-1/2 -translate-x-1/2
+      bg-slate-800/80 backdrop-blur-sm p-4 rounded-lg w-[90%] max-w-sm
+      md:static md:transform-none md:w-auto md:top-auto md:bg-slate-800 md:backdrop-blur-none">
+      
+      <!-- Fondo de galaxia (solo visible en móvil) -->
+      <div class="absolute inset-0 -z-10 md:hidden overflow-hidden rounded-lg">
+        <div class="star-background-modal">
+          <div class="stars-1"></div>
+          <div class="stars-2"></div>
+          <div class="stars-3"></div>
+        </div>
+      </div>
+      
+      <!-- Flecha del tooltip (solo visible en desktop) -->
+      <div class="hidden md:block absolute -top-2 left-4 w-4 h-4 rotate-45 bg-slate-800 border-l border-t border-slate-700"></div>
+      
+      <!-- Header con botón cerrar (solo visible en móvil) -->
+      <div class="flex justify-between items-center mb-4 md:hidden">
+        <h3 class="font-semibold">Aptitudes</h3>
+        <button id="closeModal" class="text-gray-400 hover:text-white">&times;</button>
+      </div>
+
+      <!-- Lista de aptitudes -->
+      <ul class="list-none space-y-2">
+        {aptitudes.map(aptitud => (
+          <li>{aptitud}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('aptitudesBtn');
+  const content = document.getElementById('aptitudesContent');
+  const closeBtn = document.getElementById('closeModal');
+
+  // Función para manejar la visibilidad del modal
+  const showModal = () => content?.classList.remove('hidden');
+  const hideModal = () => content?.classList.add('hidden');
+
+  // Event listeners para el modal
+  if (btn && content && closeBtn) {
+    btn.addEventListener('click', () => {
+      // Solo mostramos el modal si estamos en móvil
+      if (window.innerWidth < 768) {
+        showModal();
+      }
+    });
+
+    closeBtn.addEventListener('click', hideModal);
+
+    content.addEventListener('click', (e) => {
+      if (e.target === content) {
+        hideModal();
+      }
+    });
+  }
+</script>
+
+<style>
+.star-background-modal {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.stars-1, .stars-2, .stars-3 {
+  position: absolute;
+  inset: 0;
+}
+
+.stars-1 {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: var(--stars-shadow-1);
+  animation: animStarModal 50s linear infinite;
+}
+
+.stars-2 {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: var(--stars-shadow-2);
+  animation: animStarModal 100s linear infinite;
+}
+
+.stars-3 {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: var(--stars-shadow-3);
+  animation: animStarModal 150s linear infinite;
+}
+
+@keyframes animStarModal {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-2000px);
+  }
+}
+</style>
