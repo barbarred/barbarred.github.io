@@ -10,8 +10,8 @@ import PillsMpo from './PillsMpo.astro';
   </span>
   <div
     id="insta-modal-tooltip"
-    class="md:absolute md:z-50 md:left-1/2 md:top-full md:mt-2 md:-translate-x-1/2 md:bg-transparent md:transition-opacity md:duration-150 md:block hidden"
-    style="width:440px; min-width:440px; max-width:440px; opacity:0; pointer-events:none;"
+    class="hidden md:block md:absolute md:z-50 md:left-1/2 md:top-full md:mt-2 md:-translate-x-1/2 md:bg-transparent md:transition-opacity md:duration-150"
+    style="width:440px; min-width:440px; max-width:440px; opacity:0; pointer-events:none; visibility:hidden;"
   >
     <a href="https://www.instagram.com/marquesaspo/" target="_blank" rel="noopener noreferrer">
       <img
@@ -35,12 +35,14 @@ if (typeof window !== 'undefined') {
       if (window.innerWidth >= 768) {
         tooltip.style.opacity = '1';
         tooltip.style.pointerEvents = 'auto';
+        tooltip.style.visibility = 'visible';
       }
     };
     const hideTooltip = () => {
       if (!isOverTooltip && !isOverTrigger && window.innerWidth >= 768) {
         tooltip.style.opacity = '0';
         tooltip.style.pointerEvents = 'none';
+        tooltip.style.visibility = 'hidden';
       }
     };
     trigger.addEventListener('mouseenter', () => {
