@@ -1,0 +1,83 @@
+---
+import PillsMpo from './PillsMpo.astro';
+---
+
+<div class="relative group">
+  <span class="cursor-pointer md:cursor-default font-semibold md:pointer-events-none">
+    <a href="https://www.instagram.com/marquesaspo/" target="_blank" rel="noopener noreferrer">
+      <PillsMpo />
+    </a>
+  </span>
+  <div
+    id="insta-modal-tooltip"
+    class="md:absolute md:z-50 md:left-1/2 md:top-full md:mt-2 md:-translate-x-1/2 md:bg-transparent md:transition-opacity md:duration-150 md:block hidden"
+    style="width:440px; min-width:440px; max-width:440px; opacity:0; pointer-events:none;"
+  >
+    <a href="https://www.instagram.com/marquesaspo/" target="_blank" rel="noopener noreferrer">
+      <img
+        src="/card_Insta.png"
+        alt="Instagram Card"
+        class="rounded-lg shadow-lg transition-transform hover:scale-105 bg-white w-full"
+        style="width:440px; min-width:440px; max-width:440px;"
+      />
+    </a>
+  </div>
+</div>
+
+<script>
+if (typeof window !== 'undefined') {
+  const trigger = document.querySelector('.group');
+  const tooltip = document.getElementById('insta-modal-tooltip');
+  let isOverTooltip = false;
+  let isOverTrigger = false;
+  if (trigger && tooltip) {
+    const showTooltip = () => {
+      if (window.innerWidth >= 768) {
+        tooltip.style.opacity = '1';
+        tooltip.style.pointerEvents = 'auto';
+      }
+    };
+    const hideTooltip = () => {
+      if (!isOverTooltip && !isOverTrigger && window.innerWidth >= 768) {
+        tooltip.style.opacity = '0';
+        tooltip.style.pointerEvents = 'none';
+      }
+    };
+    trigger.addEventListener('mouseenter', () => {
+      isOverTrigger = true;
+      showTooltip();
+    });
+    trigger.addEventListener('mouseleave', () => {
+      isOverTrigger = false;
+      setTimeout(hideTooltip, 60);
+    });
+    tooltip.addEventListener('mouseenter', () => {
+      isOverTooltip = true;
+      showTooltip();
+    });
+    tooltip.addEventListener('mouseleave', () => {
+      isOverTooltip = false;
+      setTimeout(hideTooltip, 60);
+    });
+  }
+}
+</script>
+
+<style>
+@media (min-width: 768px) {
+  #insta-modal-tooltip {
+    display: block;
+    animation: fadeIn 0.18s ease-in-out;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
