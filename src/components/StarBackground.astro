@@ -328,7 +328,7 @@ class GalaxyOptimized {
 
   animateShootingStar(element: HTMLElement, animationName: string, duration: number): void {
     // Optimización: Usar Web Animations API para mejor control
-    if (element && element.animate) {
+    if (element) {
       // Limpiar animación anterior si existe
       const existingAnimation = this.shootingStarAnimations.get(element);
       if (existingAnimation) {
