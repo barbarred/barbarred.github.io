@@ -1,5 +1,11 @@
----
----
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxia Optimizada</title>
+</head>
+<body>
 
 <div class="star-background">
   <div id="stars"></div>    
@@ -19,14 +25,50 @@
   z-index: -1;
   background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
   overflow: hidden;
+  /* Optimización: Preparar para animaciones */
+  will-change: auto;
+}
+
+/* Optimización: Usar variables CSS pre-definidas para diferentes resoluciones */
+:root {
+  --stars-small: 
+    12px 15px #FFF, 45px 87px #FFF, 123px 45px #FFF, 234px 123px #FFF, 345px 67px #FFF,
+    456px 234px #FFF, 567px 89px #FFF, 678px 345px #FFF, 789px 123px #FFF, 890px 456px #FFF,
+    23px 567px #FFF, 134px 234px #FFF, 245px 678px #FFF, 356px 345px #FFF, 467px 789px #FFF,
+    578px 123px #FFF, 689px 567px #FFF, 790px 234px #FFF, 821px 678px #FFF, 932px 345px #FFF;
+  
+  --stars-medium:
+    23px 234px #FFF, 145px 567px #FFF, 267px 123px #FFF, 389px 678px #FFF, 451px 234px #FFF,
+    573px 789px #FFF, 695px 345px #FFF, 817px 567px #FFF, 939px 123px #FFF, 161px 678px #FFF;
+  
+  --stars-large:
+    67px 345px #FFF, 189px 567px #FFF, 311px 123px #FFF, 433px 789px #FFF, 555px 234px #FFF;
+}
+
+/* Media queries para diferentes resoluciones */
+@media (max-width: 768px) {
+  :root {
+    --stars-small: 
+      12px 15px #FFF, 145px 87px #FFF, 223px 145px #FFF, 334px 223px #FFF, 445px 67px #FFF,
+      156px 334px #FFF, 267px 189px #FFF, 378px 445px #FFF, 489px 223px #FFF, 590px 356px #FFF;
+    
+    --stars-medium:
+      23px 134px #FFF, 245px 367px #FFF, 167px 223px #FFF, 289px 478px #FFF, 351px 134px #FFF;
+    
+    --stars-large:
+      67px 245px #FFF, 189px 367px #FFF, 211px 123px #FFF;
+  }
 }
 
 #stars {
   width: 1px;
   height: 1px;
   background: transparent;
-  box-shadow: var(--stars-shadow-1);
+  box-shadow: var(--stars-small);
   animation: animStar 50s linear infinite;
+  /* Optimización: Activar aceleración por hardware */
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 #stars:after {
@@ -36,15 +78,17 @@
   width: 1px;
   height: 1px;
   background: transparent;
-  box-shadow: var(--stars-shadow-1);
+  box-shadow: var(--stars-small);
 }
 
 #stars2 {
   width: 2px;
   height: 2px;
   background: transparent;
-  box-shadow: var(--stars-shadow-2);
+  box-shadow: var(--stars-medium);
   animation: animStar 100s linear infinite;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 #stars2:after {
@@ -54,15 +98,17 @@
   width: 2px;
   height: 2px;
   background: transparent;
-  box-shadow: var(--stars-shadow-2);
+  box-shadow: var(--stars-medium);
 }
 
 #stars3 {
   width: 3px;
   height: 3px;
   background: transparent;
-  box-shadow: var(--stars-shadow-3);
+  box-shadow: var(--stars-large);
   animation: animStar 150s linear infinite;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 #stars3:after {
@@ -72,15 +118,15 @@
   width: 3px;
   height: 3px;
   background: transparent;
-  box-shadow: var(--stars-shadow-3);
+  box-shadow: var(--stars-large);
 }
 
 @keyframes animStar {
   from {
-    transform: translateY(0px);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateY(-2000px);
+    transform: translate3d(0, -2000px, 0);
   }
 }
 
@@ -92,133 +138,243 @@
   border-radius: 50%;
   filter: drop-shadow(0 0 10px #fff);
   opacity: 0;
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translateX(-100%);
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
-  }
+  /* Optimización: Preparar para animaciones complejas */
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
 }
 
-/* Animación de derecha a izquierda en diagonal */
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100%);
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+}
+
+/* Animaciones optimizadas con translate3d */
 @keyframes shootingStarRightToLeft {
   0% {
-    transform: translate(110vw, 20vh) rotate(-15deg);
+    transform: translate3d(110vw, 20vh, 0) rotate(-15deg);
     opacity: 0;
   }
   15% {
     opacity: 1;
   }
   70% {
-    transform: translate(-10vw, 40vh) rotate(-15deg);
+    transform: translate3d(-10vw, 40vh, 0) rotate(-15deg);
     opacity: 1;
   }
   100% {
-    transform: translate(-10vw, 40vh) rotate(-15deg);
+    transform: translate3d(-10vw, 40vh, 0) rotate(-15deg);
     opacity: 0;
   }
 }
 
-/* Animación de izquierda a derecha en diagonal */
 @keyframes shootingStarLeftToRight {
   0% {
-    transform: translate(-10vw, 40vh) rotate(15deg);
+    transform: translate3d(-10vw, 40vh, 0) rotate(15deg);
     opacity: 0;
   }
   15% {
     opacity: 1;
   }
   70% {
-    transform: translate(110vw, 60vh) rotate(15deg);
+    transform: translate3d(110vw, 60vh, 0) rotate(15deg);
     opacity: 1;
   }
   100% {
-    transform: translate(110vw, 60vh) rotate(15deg);
+    transform: translate3d(110vw, 60vh, 0) rotate(15deg);
     opacity: 0;
   }
 }
 
-/* Animación de arriba a abajo en diagonal */
 @keyframes shootingStarTopToBottom {
   0% {
-    transform: translate(30vw, -10vh) rotate(45deg);
+    transform: translate3d(30vw, -10vh, 0) rotate(45deg);
     opacity: 0;
   }
   15% {
     opacity: 1;
   }
   70% {
-    transform: translate(60vw, 110vh) rotate(45deg);
+    transform: translate3d(60vw, 110vh, 0) rotate(45deg);
     opacity: 1;
   }
   100% {
-    transform: translate(60vw, 110vh) rotate(45deg);
+    transform: translate3d(60vw, 110vh, 0) rotate(45deg);
     opacity: 0;
+  }
+}
+
+/* Optimización: Reducir motion para usuarios que prefieren menos animación */
+@media (prefers-reduced-motion: reduce) {
+  #stars, #stars2, #stars3 {
+    animation-duration: 200s;
+  }
+  
+  .shooting-star {
+    display: none;
   }
 }
 </style>
 
 <script>
-function generateStarsShadow(count: number, size: number) {
-  let shadow = '';
-  for (let i = 0; i < count; i++) {
-    const x = Math.floor(Math.random() * window.innerWidth);
-    const y = Math.floor(Math.random() * 2000);
-    shadow += `${x}px ${y}px #FFF${i === count - 1 ? '' : ', '}`;
-  }
-  return shadow;
-}
-
-function updateStarsShadows() {
-  const root = document.documentElement;
-  root.style.setProperty('--stars-shadow-1', generateStarsShadow(700, 1));
-  root.style.setProperty('--stars-shadow-2', generateStarsShadow(200, 2));
-  root.style.setProperty('--stars-shadow-3', generateStarsShadow(100, 3));
-}
-
-// Inicializar las estrellas
-updateStarsShadows();
-
-// Actualizar cuando cambie el tamaño de la ventana
-window.addEventListener('resize', updateStarsShadows);
-
-// Función para animar las estrellas en secuencia
-function animateShootingStars() {
-  const rightToLeft = document.querySelector('.right-to-left') as HTMLElement;
-  const topToBottom = document.querySelector('.top-to-bottom') as HTMLElement;
-
-  // Duración de cada animación
-  const duration = 5;
-  // Retraso entre las estrellas (4 segundos)
-  const delay = 4;
-
-  function animate() {
-    // Primera estrella (derecha a izquierda)
-    setTimeout(() => {
-      rightToLeft.style.animation = 'none';
-      rightToLeft.offsetHeight;
-      rightToLeft.style.animation = `shootingStarRightToLeft ${duration}s cubic-bezier(0.4, 0, 0.2, 1)`;
-    }, 0);
-
-    // Segunda estrella (arriba a abajo), 4 segundos después
-    setTimeout(() => {
-      topToBottom.style.animation = 'none';
-      topToBottom.offsetHeight;
-      topToBottom.style.animation = `shootingStarTopToBottom ${duration}s cubic-bezier(0.4, 0, 0.2, 1)`;
-    }, delay * 1000);
+// Optimización: Usar un enfoque más eficiente para las estrellas
+class GalaxyOptimized {
+  constructor() {
+    this.initialized = false;
+    this.resizeTimeout = null;
+    this.shootingStarAnimations = new Map();
+    this.init();
   }
 
-  // Iniciar la primera secuencia
-  animate();
+  init() {
+    if (this.initialized) return;
+    
+    // Optimización: Solo generar estrellas si es necesario
+    this.updateStarsForCurrentViewport();
+    this.setupEventListeners();
+    this.initShootingStars();
+    
+    this.initialized = true;
+  }
 
-  // Repetir la secuencia cada 10 segundos (5s de duración + 4s de delay + 1s extra)
-  setInterval(animate, 10000);
+  updateStarsForCurrentViewport() {
+    // Optimización: Usar viewport actual en lugar de generar siempre
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    // Solo actualizar si el cambio es significativo
+    if (this.lastWidth && Math.abs(this.lastWidth - width) < 100) {
+      return;
+    }
+    
+    this.lastWidth = width;
+    
+    // Generar estrellas optimizadas para el viewport actual
+    const smallStars = this.generateOptimizedStars(Math.min(700, width * 0.5), width, height);
+    const mediumStars = this.generateOptimizedStars(Math.min(200, width * 0.15), width, height);
+    const largeStars = this.generateOptimizedStars(Math.min(100, width * 0.08), width, height);
+    
+    // Actualizar CSS custom properties
+    const root = document.documentElement;
+    root.style.setProperty('--stars-small', smallStars);
+    root.style.setProperty('--stars-medium', mediumStars);
+    root.style.setProperty('--stars-large', largeStars);
+  }
+
+  generateOptimizedStars(count, maxWidth, maxHeight) {
+    const stars = [];
+    
+    // Optimización: Usar distribución más eficiente
+    for (let i = 0; i < count; i++) {
+      const x = Math.floor(Math.random() * maxWidth);
+      const y = Math.floor(Math.random() * Math.min(2000, maxHeight * 2));
+      stars.push(`${x}px ${y}px #FFF`);
+    }
+    
+    return stars.join(', ');
+  }
+
+  setupEventListeners() {
+    // Optimización: Debounce resize para mejor rendimiento
+    window.addEventListener('resize', () => {
+      if (this.resizeTimeout) {
+        clearTimeout(this.resizeTimeout);
+      }
+      
+      this.resizeTimeout = setTimeout(() => {
+        this.updateStarsForCurrentViewport();
+      }, 250); // Esperar 250ms después del último resize
+    });
+  }
+
+  initShootingStars() {
+    // Optimización: Usar requestAnimationFrame para mejor sincronización
+    const rightToLeft = document.querySelector('.right-to-left');
+    const topToBottom = document.querySelector('.top-to-bottom');
+
+    if (!rightToLeft || !topToBottom) return;
+
+    const duration = 5000; // ms
+    const delay = 4000; // ms
+
+    const animateSequence = () => {
+      // Primera estrella
+      this.animateShootingStar(rightToLeft, 'shootingStarRightToLeft', duration);
+      
+      // Segunda estrella con delay
+      setTimeout(() => {
+        this.animateShootingStar(topToBottom, 'shootingStarTopToBottom', duration);
+      }, delay);
+    };
+
+    // Iniciar después de 1 segundo
+    setTimeout(animateSequence, 1000);
+    
+    // Repetir cada 10 segundos
+    setInterval(animateSequence, 10000);
+  }
+
+  animateShootingStar(element, animationName, duration) {
+    // Optimización: Usar Web Animations API para mejor control
+    if (element.animate) {
+      // Limpiar animación anterior si existe
+      const existingAnimation = this.shootingStarAnimations.get(element);
+      if (existingAnimation) {
+        existingAnimation.cancel();
+      }
+
+      // Crear nueva animación
+      element.style.animation = 'none';
+      element.offsetHeight; // Forzar reflow
+      element.style.animation = `${animationName} ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+    }
+  }
+
+  // Método para limpiar recursos si es necesario
+  destroy() {
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
+    
+    // Limpiar animaciones
+    this.shootingStarAnimations.forEach(animation => {
+      animation.cancel();
+    });
+    this.shootingStarAnimations.clear();
+    
+    this.initialized = false;
+  }
 }
 
-// Iniciar las animaciones después de un pequeño retraso
-setTimeout(animateShootingStars, 1000);
+// Optimización: Inicializar solo cuando el DOM esté listo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    new GalaxyOptimized();
+  });
+} else {
+  new GalaxyOptimized();
+}
+
+// Optimización: Pausar animaciones cuando la pestaña no está visible
+document.addEventListener('visibilitychange', () => {
+  const stars = document.querySelectorAll('#stars, #stars2, #stars3, .shooting-star');
+  
+  if (document.hidden) {
+    stars.forEach(star => {
+      star.style.animationPlayState = 'paused';
+    });
+  } else {
+    stars.forEach(star => {
+      star.style.animationPlayState = 'running';
+    });
+  }
+});
 </script>
+
+</body>
+</html>
