@@ -224,14 +224,21 @@
 <script>
 // Optimización: Usar un enfoque más eficiente para las estrellas
 class GalaxyOptimized {
+  // Declaración de propiedades con tipos explícitos
+  initialized: boolean;
+  resizeTimeout: number | null;
+  shootingStarAnimations: Map<Element, Animation>;
+  lastWidth: number | null;
+
   constructor() {
     this.initialized = false;
     this.resizeTimeout = null;
     this.shootingStarAnimations = new Map();
+    this.lastWidth = null;
     this.init();
   }
 
-  init() {
+  init(): void {
     if (this.initialized) return;
     
     // Optimización: Solo generar estrellas si es necesario
@@ -242,7 +249,7 @@ class GalaxyOptimized {
     this.initialized = true;
   }
 
-  updateStarsForCurrentViewport() {
+  updateStarsForCurrentViewport(): void {
     // Optimización: Usar viewport actual en lugar de generar siempre
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -266,8 +273,8 @@ class GalaxyOptimized {
     root.style.setProperty('--stars-large', largeStars);
   }
 
-  generateOptimizedStars(count, maxWidth, maxHeight) {
-    const stars = [];
+  generateOptimizedStars(count: number, maxWidth: number, maxHeight: number): string {
+    const stars: string[] = [];
     
     // Optimización: Usar distribución más eficiente
     for (let i = 0; i < count; i++) {
@@ -279,23 +286,23 @@ class GalaxyOptimized {
     return stars.join(', ');
   }
 
-  setupEventListeners() {
+  setupEventListeners(): void {
     // Optimización: Debounce resize para mejor rendimiento
     window.addEventListener('resize', () => {
       if (this.resizeTimeout) {
         clearTimeout(this.resizeTimeout);
       }
       
-      this.resizeTimeout = setTimeout(() => {
+      this.resizeTimeout = window.setTimeout(() => {
         this.updateStarsForCurrentViewport();
       }, 250); // Esperar 250ms después del último resize
     });
   }
 
-  initShootingStars() {
+  initShootingStars(): void {
     // Optimización: Usar requestAnimationFrame para mejor sincronización
-    const rightToLeft = document.querySelector('.right-to-left');
-    const topToBottom = document.querySelector('.top-to-bottom');
+    const rightToLeft = document.querySelector('.right-to-left') as HTMLElement;
+    const topToBottom = document.querySelector('.top-to-bottom') as HTMLElement;
 
     if (!rightToLeft || !topToBottom) return;
 
@@ -319,9 +326,9 @@ class GalaxyOptimized {
     setInterval(animateSequence, 10000);
   }
 
-  animateShootingStar(element, animationName, duration) {
+  animateShootingStar(element: HTMLElement, animationName: string, duration: number): void {
     // Optimización: Usar Web Animations API para mejor control
-    if (element.animate) {
+    if (element && element.animate) {
       // Limpiar animación anterior si existe
       const existingAnimation = this.shootingStarAnimations.get(element);
       if (existingAnimation) {
@@ -336,13 +343,13 @@ class GalaxyOptimized {
   }
 
   // Método para limpiar recursos si es necesario
-  destroy() {
+  destroy(): void {
     if (this.resizeTimeout) {
       clearTimeout(this.resizeTimeout);
     }
     
     // Limpiar animaciones
-    this.shootingStarAnimations.forEach(animation => {
+    this.shootingStarAnimations.forEach((animation: Animation) => {
       animation.cancel();
     });
     this.shootingStarAnimations.clear();
@@ -351,29 +358,37 @@ class GalaxyOptimized {
   }
 }
 
-// Optimización: Inicializar solo cuando el DOM esté listo
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    new GalaxyOptimized();
-  });
-} else {
-  new GalaxyOptimized();
-}
-
-// Optimización: Pausar animaciones cuando la pestaña no está visible
-document.addEventListener('visibilitychange', () => {
+// Función auxiliar para manejar la visibilidad de animaciones
+function handleVisibilityChange(): void {
   const stars = document.querySelectorAll('#stars, #stars2, #stars3, .shooting-star');
   
   if (document.hidden) {
-    stars.forEach(star => {
-      star.style.animationPlayState = 'paused';
+    stars.forEach((star) => {
+      (star as HTMLElement).style.animationPlayState = 'paused';
     });
   } else {
-    stars.forEach(star => {
-      star.style.animationPlayState = 'running';
+    stars.forEach((star) => {
+      (star as HTMLElement).style.animationPlayState = 'running';
     });
   }
-});
+}
+
+// Optimización: Inicializar solo cuando el DOM esté listo
+function initializeGalaxy(): void {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      new GalaxyOptimized();
+    });
+  } else {
+    new GalaxyOptimized();
+  }
+}
+
+// Inicializar la galaxia
+initializeGalaxy();
+
+// Optimización: Pausar animaciones cuando la pestaña no está visible
+document.addEventListener('visibilitychange', handleVisibilityChange);
 </script>
 
 </body>
