@@ -1,9 +1,11 @@
 ---
 import Badge from '../components/Badge.astro'
 import InstagramIcon from './Icons/InstagramIcon.astro';
+
+const componentId = `project-${Math.random().toString(36).slice(2, 11)}`;
 ---
 
-<div class="mb-5 w-full">
+<div class="mb-5 w-full" data-component-id={componentId}>
     <h3 class="text-xs md:text-sm font-semibold text-gray-400 mb-4">PROYECTO</h3>
     <div class="flex mb-5 gap-x-12 md:gap-x-44">
         <div class="flex flex-row items-center gap-x-2">
@@ -11,23 +13,23 @@ import InstagramIcon from './Icons/InstagramIcon.astro';
             <a href="https://www.instagram.com/coming.gigs/"><h2 class="text-sm md:text-base ml-1">Coming Gigs</h2></a>
         </div>
         <div>
-            <button class="demobtn font-semibold"><Badge>ver proyecto</Badge></button>
+            <button class={`demobtn-${componentId} font-semibold`}><Badge>ver proyecto</Badge></button>
         </div>
     </div>
-    <div class="demo-container">
+    <div class={`demo-container-${componentId}`}>
         <div class="demo-modal">
             <div class="flex flex-col mb-3">
-                <button class="text-black self-end btn-modal text-base font-semibold">cerrar</button>
+                <button class={`text-black self-end btn-modal-${componentId} text-base font-semibold`}>cerrar</button>
             </div>
-            <!-- CAMBIADO: Removido src, agregado data-src y preload="none" -->
+            <!-- Video con control de singleton más estricto -->
             <video 
                 controls 
                 muted="muted" 
                 class="w-full" 
                 data-src="/coming-gigs-demo.mp4"
+                data-loaded="false"
                 preload="none"
-                id="demo-video">
-                <!-- Fallback para navegadores que no soporten MP4 -->
+                id={`demo-video-${componentId}`}>
                 <p>Tu navegador no soporta video HTML5.</p>
             </video>
         </div>
@@ -35,7 +37,7 @@ import InstagramIcon from './Icons/InstagramIcon.astro';
 </div>
 
 <style is:global>
-    .demo-container{
+    [class*="demo-container-"]{
         position: fixed;
         top: 0;
         left: 0;
@@ -45,6 +47,7 @@ import InstagramIcon from './Icons/InstagramIcon.astro';
         display: flex;
         opacity: 0;
         pointer-events: none;
+        z-index: 9999;
     }
     .demo-modal{
         margin: auto;
@@ -59,39 +62,210 @@ import InstagramIcon from './Icons/InstagramIcon.astro';
     }
 </style>
 
-<script>
-    const show: HTMLButtonElement | null = document.querySelector(".demobtn")
-    if (show) {
-        show.addEventListener("click", () => {
-            const demo: HTMLElement | null = document.querySelector(".demo-container")
-            const video: HTMLVideoElement | null = document.querySelector("#demo-video")
-            
-            if(demo){
-                demo.classList.add('modal--show')
-                
-                // NUEVO: Cargar video solo cuando se abre el modal
-                if(video && !video.src && video.dataset.src) {
-                    video.src = video.dataset.src
-                    video.load() // Forzar la carga
+<script define:vars={{ componentId }}>
+    // SINGLETON GLOBAL ÚNICO Y MEJORADO
+    (function() {
+        // Crear el manager global solo una vez
+        if (!window.globalVideoManager) {
+            window.globalVideoManager = {
+                isLoading: false,
+                isLoaded: false,
+                loadPromise: null,
+                videoSrc: null,
+                loadAttempts: 0,
+                maxAttempts: 1,
+                // Método para obtener o crear el blob URL
+                getBlobUrl: async function(videoUrl) {
+                    if (this.blobUrl) return this.blobUrl;
+                    
+                    try {
+                        const response = await fetch(videoUrl);
+                        const blob = await response.blob();
+                        this.blobUrl = URL.createObjectURL(blob);
+                        return this.blobUrl;
+                    } catch (error) {
+                        console.error('[DEBUG] Error creating blob URL:', error);
+                        return videoUrl; // Fallback a URL original
+                    }
                 }
-            }
+            };
+        }
+        
+        const manager = window.globalVideoManager;
+        const VIDEO_URL = '/coming-gigs-demo.mp4';
+        
+        const showBtn = document.querySelector(`.demobtn-${componentId}`);
+        const hideBtn = document.querySelector(`.btn-modal-${componentId}`);
+        const demoContainer = document.querySelector(`.demo-container-${componentId}`);
+        const video = document.querySelector(`#demo-video-${componentId}`);
+        
+        console.log(`[DEBUG] Component ${componentId} initialized`);
+        console.log(`[DEBUG] Manager state:`, { 
+            isLoading: manager.isLoading, 
+            isLoaded: manager.isLoaded, 
+            loadAttempts: manager.loadAttempts 
         });
-    }
-
-    const hidde: HTMLButtonElement | null = document.querySelector(".btn-modal")
-    if (hidde) {
-        hidde.addEventListener("click", () => {
-            const demo: HTMLElement | null = document.querySelector(".demo-container")
-            const video: HTMLVideoElement | null = document.querySelector("#demo-video")
+        
+        // Función de carga con singleton REAL
+        async function loadVideoOnce() {
+            console.log(`[DEBUG] loadVideoOnce called for ${componentId}`);
             
-            if(demo){
-                demo.classList.remove('modal--show')
-                
-                // OPCIONAL: Pausar video al cerrar modal para ahorrar recursos
-                if(video) {
-                    video.pause()
-                }
+            // Si ya está cargado completamente, usar el src cacheado
+            if (manager.isLoaded && manager.videoSrc) {
+                console.log(`[DEBUG] Video ya cargado globalmente, aplicando src...`);
+                video.src = manager.videoSrc;
+                video.dataset.loaded = 'true';
+                return;
             }
-        });
-    }
+            
+            // Si está cargando, esperar a que termine
+            if (manager.isLoading && manager.loadPromise) {
+                console.log(`[DEBUG] Video cargando globalmente, esperando...`);
+                try {
+                    await manager.loadPromise;
+                    if (manager.videoSrc) {
+                        video.src = manager.videoSrc;
+                        video.dataset.loaded = 'true';
+                    }
+                } catch (error) {
+                    console.error(`[DEBUG] Error esperando carga global:`, error);
+                }
+                return;
+            }
+            
+            // Verificar límite de intentos GLOBAL
+            if (manager.loadAttempts >= manager.maxAttempts) {
+                console.log(`[DEBUG] Máximo de intentos alcanzado globalmente (${manager.maxAttempts})`);
+                return;
+            }
+            
+            // Iniciar carga ÚNICA GLOBAL
+            manager.isLoading = true;
+            manager.loadAttempts++;
+            
+            console.log(`[DEBUG] Iniciando carga ÚNICA GLOBAL del video (intento ${manager.loadAttempts})`);
+            
+            manager.loadPromise = new Promise(async (resolve, reject) => {
+                try {
+                    // Obtener el blob URL una sola vez
+                    const videoSrc = await manager.getBlobUrl(VIDEO_URL);
+                    
+                    // Guardar el src globalmente
+                    manager.videoSrc = videoSrc;
+                    
+                    // Aplicar al video actual
+                    video.src = videoSrc;
+                    video.dataset.loaded = 'true';
+                    
+                    // Esperar a que el video pueda reproducirse
+                    const canPlayPromise = new Promise((videoResolve, videoReject) => {
+                        const onCanPlay = () => {
+                            cleanup();
+                            console.log(`[DEBUG] Video cargado exitosamente GLOBALMENTE`);
+                            videoResolve();
+                        };
+                        
+                        const onError = (e) => {
+                            cleanup();
+                            console.error(`[DEBUG] Error cargando video globalmente:`, e);
+                            videoReject(e);
+                        };
+                        
+                        const cleanup = () => {
+                            video.removeEventListener('canplaythrough', onCanPlay);
+                            video.removeEventListener('error', onError);
+                        };
+                        
+                        video.addEventListener('canplaythrough', onCanPlay);
+                        video.addEventListener('error', onError);
+                        
+                        // Timeout de seguridad
+                        setTimeout(() => {
+                            cleanup();
+                            videoReject(new Error('Timeout loading video'));
+                        }, 15000);
+                    });
+                    
+                    // Forzar carga
+                    video.load();
+                    
+                    // Esperar a que cargue
+                    await canPlayPromise;
+                    
+                    manager.isLoaded = true;
+                    manager.isLoading = false;
+                    resolve();
+                    
+                } catch (error) {
+                    console.error(`[DEBUG] Error en loadVideoOnce:`, error);
+                    manager.isLoading = false;
+                    manager.loadAttempts = 0; // Reset para permitir reintento
+                    reject(error);
+                }
+            });
+            
+            await manager.loadPromise;
+        }
+        
+        if (showBtn && demoContainer && video) {
+            showBtn.addEventListener("click", async (e) => {
+                // Prevenir múltiples clicks rápidos
+                if (showBtn.disabled) return;
+                showBtn.disabled = true;
+                
+                console.log(`[DEBUG] Click en mostrar proyecto - ${componentId}`);
+                console.log(`[DEBUG] Manager state before load:`, { 
+                    isLoading: manager.isLoading, 
+                    isLoaded: manager.isLoaded, 
+                    loadAttempts: manager.loadAttempts,
+                    hasVideoSrc: !!manager.videoSrc
+                });
+                
+                demoContainer.classList.add('modal--show');
+                
+                try {
+                    await loadVideoOnce();
+                } catch (error) {
+                    console.error(`[DEBUG] Error loading video:`, error);
+                } finally {
+                    // Re-habilitar botón después de un pequeño delay
+                    setTimeout(() => {
+                        showBtn.disabled = false;
+                    }, 500);
+                }
+            });
+        }
+        
+        if (hideBtn && demoContainer && video) {
+            hideBtn.addEventListener("click", () => {
+                console.log(`[DEBUG] Click en cerrar modal - ${componentId}`);
+                demoContainer.classList.remove('modal--show');
+                
+                if (video.src) {
+                    video.pause();
+                }
+            });
+        }
+        
+        // Debug global (solo se ejecuta una vez por componente)
+        setTimeout(() => {
+            console.log(`[DEBUG] Estado del manager desde ${componentId}:`, {
+                isLoading: manager.isLoading,
+                isLoaded: manager.isLoaded,
+                loadAttempts: manager.loadAttempts,
+                hasVideoSrc: !!manager.videoSrc,
+                hasBlobUrl: !!manager.blobUrl
+            });
+            
+            // Contar requests de video en Network (solo desde el primer componente)
+            if (performance && performance.getEntriesByType && !window.videoDebugDone) {
+                window.videoDebugDone = true;
+                const videoRequests = performance.getEntriesByType('resource')
+                    .filter(entry => entry.name.includes('coming-gigs-demo.mp4'));
+                console.log(`[DEBUG] Requests de video detectados:`, videoRequests.length);
+                console.log(`[DEBUG] Detalles de requests:`, videoRequests);
+            }
+        }, 1000);
+        
+    })(); // IIFE para evitar conflictos entre componentes
 </script>

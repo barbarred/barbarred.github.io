@@ -1,0 +1,349 @@
+---
+// AudioSwitch.astro
+const componentId = `audio-${Math.random().toString(36).slice(2, 11)}`;
+---
+
+<div class="fixed bottom-4 right-4 flex items-center gap-2 z-50 bg-black/20 backdrop-blur-sm p-2 rounded-full">
+  <span 
+    id={`audio-status-icon-${componentId}`}
+    class="text-sm text-white" 
+    title="Click para activar audio"
+  >
+    🔇
+  </span>
+  <button
+    id={`audio-toggle-${componentId}`}
+    class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 bg-gray-600"
+    aria-label="Activar sonido de fondo"
+  >
+    <span
+      id={`audio-switch-${componentId}`}
+      class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 translate-x-1"
+    />
+  </button>
+</div>
+
+<script define:vars={{ componentId }}>
+    // SINGLETON GLOBAL ÚNICO PARA AUDIO
+    (function() {
+        // Crear el manager global solo una vez
+        if (!window.globalAudioManager) {
+            window.globalAudioManager = {
+                isLoading: false,
+                isLoaded: false,
+                isPlaying: false,
+                hasError: false,
+                loadPromise: null,
+                audio: null,
+                blobUrl: null,
+                loadAttempts: 0,
+                maxAttempts: 1,
+                
+                // Método para obtener o crear el blob URL del audio
+                getBlobUrl: async function(audioUrl) {
+                    if (this.blobUrl) return this.blobUrl;
+                    
+                    try {
+                        const response = await fetch(audioUrl);
+                        const blob = await response.blob();
+                        this.blobUrl = URL.createObjectURL(blob);
+                        return this.blobUrl;
+                    } catch (error) {
+                        console.error('[AUDIO DEBUG] Error creating blob URL:', error);
+                        return audioUrl; // Fallback a URL original
+                    }
+                },
+                
+                // Método para crear la instancia de audio una sola vez
+                createAudioInstance: function(audioSrc) {
+                    if (this.audio) return this.audio;
+                    
+                    console.log('[AUDIO DEBUG] Creando ÚNICA instancia de audio');
+                    const audio = new Audio();
+                    audio.preload = 'none';
+                    audio.loop = true;
+                    audio.volume = 0.3;
+                    audio.src = audioSrc;
+                    
+                    // Event listeners
+                    audio.addEventListener('play', () => {
+                        this.isPlaying = true;
+                        this.notifyAllComponents();
+                    });
+                    
+                    audio.addEventListener('pause', () => {
+                        this.isPlaying = false;
+                        this.notifyAllComponents();
+                    });
+                    
+                    audio.addEventListener('ended', () => {
+                        this.isPlaying = false;
+                        this.notifyAllComponents();
+                    });
+                    
+                    audio.addEventListener('error', (e) => {
+                        console.error('[AUDIO DEBUG] Error en audio:', e);
+                        this.hasError = true;
+                        this.isLoading = false;
+                        this.isLoaded = false;
+                        this.loadAttempts = 0; // Reset para permitir reintento
+                        this.notifyAllComponents();
+                    });
+                    
+                    this.audio = audio;
+                    return audio;
+                },
+                
+                // Notificar a todos los componentes sobre cambios de estado
+                notifyAllComponents: function() {
+                    if (this.uiComponents) {
+                        this.uiComponents.forEach(updateFn => updateFn());
+                    }
+                },
+                
+                // Registrar componente UI
+                registerComponent: function(updateFn) {
+                    if (!this.uiComponents) this.uiComponents = new Set();
+                    this.uiComponents.add(updateFn);
+                },
+                
+                // Desregistrar componente UI
+                unregisterComponent: function(updateFn) {
+                    if (this.uiComponents) {
+                        this.uiComponents.delete(updateFn);
+                    }
+                }
+            };
+        }
+        
+        const manager = window.globalAudioManager;
+        const AUDIO_URL = '/sounds/dialup.wav';
+        
+        const toggleButton = document.querySelector(`#audio-toggle-${componentId}`);
+        const statusIcon = document.querySelector(`#audio-status-icon-${componentId}`);
+        const switchElement = document.querySelector(`#audio-switch-${componentId}`);
+        
+        console.log(`[AUDIO DEBUG] Component ${componentId} initialized`);
+        console.log(`[AUDIO DEBUG] Manager state:`, { 
+            isLoading: manager.isLoading, 
+            isLoaded: manager.isLoaded,
+            isPlaying: manager.isPlaying,
+            loadAttempts: manager.loadAttempts 
+        });
+        
+        // Función para actualizar la UI de este componente
+        function updateUI() {
+            if (!statusIcon || !toggleButton || !switchElement) return;
+            
+            // Actualizar icono
+            if (manager.hasError) {
+                statusIcon.textContent = '❌';
+                statusIcon.title = 'Error - Click para reintentar';
+            } else if (manager.isLoading) {
+                statusIcon.textContent = '⏳';
+                statusIcon.title = 'Cargando audio...';
+            } else if (manager.isPlaying) {
+                statusIcon.textContent = '🔊';
+                statusIcon.title = 'Reproduciendo - Click para pausar';
+            } else {
+                statusIcon.textContent = '🔇';
+                statusIcon.title = manager.isLoaded ? 'Pausado - Click para reproducir' : 'Click para activar audio';
+            }
+
+            // Actualizar botón
+            const buttonClass = manager.hasError ? 'bg-red-600' : 
+                               manager.isLoading ? 'bg-yellow-600' : 
+                               manager.isPlaying ? 'bg-green-600' : 'bg-gray-600';
+            
+            toggleButton.className = `relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${buttonClass}`;
+
+            // Actualizar switch
+            const switchClass = manager.isPlaying ? 'translate-x-6' : 'translate-x-1';
+            switchElement.className = `inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${switchClass}`;
+        }
+        
+        // Registrar este componente para recibir actualizaciones
+        manager.registerComponent(updateUI);
+        
+        // Función de carga y toggle con singleton REAL
+        async function loadAudioOnce() {
+            console.log(`[AUDIO DEBUG] loadAudioOnce called for ${componentId}`);
+            
+            // Si ya está cargado completamente, toggle directo
+            if (manager.isLoaded && manager.audio) {
+                console.log(`[AUDIO DEBUG] Audio ya cargado globalmente, haciendo toggle...`);
+                if (manager.isPlaying) {
+                    manager.audio.pause();
+                } else {
+                    try {
+                        await manager.audio.play();
+                    } catch (error) {
+                        console.error(`[AUDIO DEBUG] Error reproduciendo audio:`, error);
+                        manager.hasError = true;
+                        manager.notifyAllComponents();
+                    }
+                }
+                return;
+            }
+            
+            // Si está cargando, esperar a que termine
+            if (manager.isLoading && manager.loadPromise) {
+                console.log(`[AUDIO DEBUG] Audio cargando globalmente, esperando...`);
+                try {
+                    await manager.loadPromise;
+                    if (manager.audio && manager.isLoaded) {
+                        await manager.audio.play();
+                    }
+                } catch (error) {
+                    console.error(`[AUDIO DEBUG] Error esperando carga global:`, error);
+                }
+                return;
+            }
+            
+            // Verificar límite de intentos GLOBAL
+            if (manager.loadAttempts >= manager.maxAttempts) {
+                console.log(`[AUDIO DEBUG] Máximo de intentos alcanzado globalmente (${manager.maxAttempts})`);
+                return;
+            }
+            
+            // Iniciar carga ÚNICA GLOBAL
+            manager.isLoading = true;
+            manager.hasError = false;
+            manager.loadAttempts++;
+            manager.notifyAllComponents();
+            
+            console.log(`[AUDIO DEBUG] Iniciando carga ÚNICA GLOBAL del audio (intento ${manager.loadAttempts})`);
+            
+            manager.loadPromise = new Promise(async (resolve, reject) => {
+                try {
+                    // Obtener el blob URL una sola vez
+                    const audioSrc = await manager.getBlobUrl(AUDIO_URL);
+                    
+                    // Crear instancia de audio una sola vez
+                    const audio = manager.createAudioInstance(audioSrc);
+                    
+                    // Esperar a que el audio pueda reproducirse
+                    const canPlayPromise = new Promise((audioResolve, audioReject) => {
+                        const onCanPlay = () => {
+                            cleanup();
+                            console.log(`[AUDIO DEBUG] Audio cargado exitosamente GLOBALMENTE`);
+                            audioResolve();
+                        };
+                        
+                        const onError = (e) => {
+                            cleanup();
+                            console.error(`[AUDIO DEBUG] Error cargando audio globalmente:`, e);
+                            audioReject(e);
+                        };
+                        
+                        const cleanup = () => {
+                            audio.removeEventListener('canplaythrough', onCanPlay);
+                            audio.removeEventListener('error', onError);
+                        };
+                        
+                        audio.addEventListener('canplaythrough', onCanPlay);
+                        audio.addEventListener('error', onError);
+                        
+                        // Timeout de seguridad
+                        setTimeout(() => {
+                            cleanup();
+                            audioReject(new Error('Timeout loading audio'));
+                        }, 15000);
+                    });
+                    
+                    // Forzar carga
+                    audio.load();
+                    
+                    // Esperar a que cargue
+                    await canPlayPromise;
+                    
+                    manager.isLoaded = true;
+                    manager.isLoading = false;
+                    manager.notifyAllComponents();
+                    resolve();
+                    
+                } catch (error) {
+                    console.error(`[AUDIO DEBUG] Error en loadAudioOnce:`, error);
+                    manager.isLoading = false;
+                    manager.hasError = true;
+                    manager.loadAttempts = 0; // Reset para permitir reintento
+                    manager.notifyAllComponents();
+                    reject(error);
+                }
+            });
+            
+            try {
+                await manager.loadPromise;
+                // Reproducir automáticamente después de cargar
+                if (manager.audio && manager.isLoaded) {
+                    await manager.audio.play();
+                }
+            } catch (error) {
+                console.error(`[AUDIO DEBUG] Error en carga completa:`, error);
+            }
+        }
+        
+        // Event listener para el botón
+        if (toggleButton) {
+            toggleButton.addEventListener("click", async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Prevenir múltiples clicks rápidos
+                if (toggleButton.disabled || manager.isLoading) return;
+                toggleButton.disabled = true;
+                
+                console.log(`[AUDIO DEBUG] Click en toggle audio - ${componentId}`);
+                console.log(`[AUDIO DEBUG] Manager state before action:`, { 
+                    isLoading: manager.isLoading, 
+                    isLoaded: manager.isLoaded,
+                    isPlaying: manager.isPlaying,
+                    loadAttempts: manager.loadAttempts,
+                    hasAudio: !!manager.audio
+                });
+                
+                try {
+                    await loadAudioOnce();
+                } catch (error) {
+                    console.error(`[AUDIO DEBUG] Error en toggle:`, error);
+                } finally {
+                    // Re-habilitar botón después de un pequeño delay
+                    setTimeout(() => {
+                        toggleButton.disabled = false;
+                    }, 500);
+                }
+            });
+        }
+        
+        // Actualización inicial de la UI
+        updateUI();
+        
+        // Debug global (solo se ejecuta una vez por componente)
+        setTimeout(() => {
+            console.log(`[AUDIO DEBUG] Estado del manager desde ${componentId}:`, {
+                isLoading: manager.isLoading,
+                isLoaded: manager.isLoaded,
+                isPlaying: manager.isPlaying,
+                hasError: manager.hasError,
+                loadAttempts: manager.loadAttempts,
+                hasAudio: !!manager.audio,
+                hasBlobUrl: !!manager.blobUrl
+            });
+            
+            // Contar requests de audio en Network (solo desde el primer componente)
+            if (performance && performance.getEntriesByType && !window.audioDebugDone) {
+                window.audioDebugDone = true;
+                const audioRequests = performance.getEntriesByType('resource')
+                    .filter(entry => entry.name.includes('dialup.wav'));
+                console.log(`[AUDIO DEBUG] Requests de audio detectados:`, audioRequests.length);
+                console.log(`[AUDIO DEBUG] Detalles de requests:`, audioRequests);
+            }
+        }, 1000);
+        
+        // Cleanup al desmontar el componente
+        window.addEventListener('beforeunload', () => {
+            manager.unregisterComponent(updateUI);
+        });
+        
+    })(); // IIFE para evitar conflictos entre componentes
+</script>
