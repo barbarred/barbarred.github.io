@@ -24,6 +24,17 @@
   will-change: auto;
 }
 
+@media (max-width: 768px) {
+  .star-background {
+    position: absolute;
+    min-height: 100vh;
+    height: auto;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
+
 :root {
   --stars-small: 
     12px 15px #FFF, 45px 87px #FFF, 123px 45px #FFF, 234px 123px #FFF, 345px 67px #FFF,
@@ -332,6 +343,17 @@ class GalaxyOptimized {
   }
 }
 
+// Ajuste dinámico del alto del fondo en móviles para evitar el efecto "pegado" en scroll
+function updateStarBackgroundHeight() {
+  const bg = document.querySelector('.star-background');
+  if (!bg) return;
+  if (window.innerWidth <= 768) {
+    bg.style.height = Math.max(document.body.scrollHeight, window.innerHeight) + 'px';
+  } else {
+    bg.style.height = '100%';
+  }
+}
+
 function handleVisibilityChange() {
   const stars = document.querySelectorAll('#stars, #stars2, #stars3, .shooting-star');
   
@@ -356,4 +378,9 @@ initializeGalaxy();
 
 // Pausar animaciones cuando la pestaña no está visible
 document.addEventListener('visibilitychange', handleVisibilityChange);
+
+// Actualizar alto del fondo en resize y scroll
+window.addEventListener('resize', updateStarBackgroundHeight);
+window.addEventListener('scroll', updateStarBackgroundHeight);
+document.addEventListener('DOMContentLoaded', updateStarBackgroundHeight);
 </script>
