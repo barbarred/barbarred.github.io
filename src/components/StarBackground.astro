@@ -345,8 +345,9 @@ class GalaxyOptimized {
 
 // Ajuste dinámico del alto del fondo en móviles para evitar el efecto "pegado" en scroll
 function updateStarBackgroundHeight() {
-  const bg = document.querySelector('.star-background');
+  const bg = document.querySelector('.star-background') as HTMLElement;
   if (!bg) return;
+  
   if (window.innerWidth <= 768) {
     bg.style.height = Math.max(document.body.scrollHeight, window.innerHeight) + 'px';
   } else {
