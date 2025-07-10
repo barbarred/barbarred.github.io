@@ -114,7 +114,7 @@ const aptitudes = [
     initModalShootingStars();
   }
 
-  function generateModalStars(count, maxWidth, maxHeight) {
+  function generateModalStars(count: number, maxWidth: number, maxHeight: number) {
     const stars = [];
     const extendedHeight = maxHeight * 2;
     
@@ -128,8 +128,8 @@ const aptitudes = [
   }
 
   function initModalShootingStars() {
-    const rightToLeft = document.querySelector('.shooting-star-modal.right-to-left');
-    const topToBottom = document.querySelector('.shooting-star-modal.top-to-bottom');
+    const rightToLeft = document.querySelector('.shooting-star-modal.right-to-left') as HTMLElement;
+    const topToBottom = document.querySelector('.shooting-star-modal.top-to-bottom') as HTMLElement;
 
     if (!rightToLeft || !topToBottom) return;
 
@@ -151,7 +151,7 @@ const aptitudes = [
     setInterval(animateSequence, 30000);
   }
 
-  function animateModalShootingStar(element, animationName, duration) {
+  function animateModalShootingStar(element: HTMLElement, animationName: string, duration: number) {
     if (element) {
       element.style.animation = 'none';
       element.offsetHeight; // Forzar reflow
@@ -162,7 +162,9 @@ const aptitudes = [
   function clearModalStars() {
     const shootingStars = document.querySelectorAll('.shooting-star-modal');
     shootingStars.forEach(star => {
-      star.style.animation = 'none';
+      if (star instanceof HTMLElement) {
+        star.style.animation = 'none';
+      }
     });
   }
 </script>
