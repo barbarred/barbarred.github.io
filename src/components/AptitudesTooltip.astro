@@ -1,51 +1,55 @@
 ---
 const aptitudes = [
   "Git",
-  "GitHub",
+  "GitHub", 
   "CI/CD",
   "SOLID",
   "TDD",
   "Six Sigma Green Belt",
-  "Pront Engineer",
+  "Prompt Engineer",
   "Scrum"
 ];
 ---
 
 <div class="relative group">
-  <button class="cursor-pointer text-xs underline underline-offset-4 md:no-underline md:text-sm md:cursor-default font-semibold md:pointer-events-none" id="aptitudesBtn">Aptitudes y Fundamentos</button>
-  
-  <div id="aptitudesContent" 
-    class="hidden absolute z-50 text-sm rounded-md
-    md:group-hover:block md:-left-2 md:top-8 md:min-w-[250px] md:pointer-events-none md:bg-slate-800 md:z-10">
-    
+  <button class="cursor-pointer text-xs underline underline-offset-4 md:no-underline md:text-sm md:cursor-default font-semibold md:pointer-events-none" id="aptitudesBtn">
+    Aptitudes y Fundamentos
+  </button>
+     
+  <div id="aptitudesContent"
+       class="hidden absolute z-50 text-sm rounded-md
+              md:group-hover:block md:-left-2 md:top-8 md:min-w-[250px] md:pointer-events-none md:bg-slate-800 md:z-10">
+         
     <!-- Overlay para oscurecer el fondo (solo en móvil) -->
     <div class="fixed inset-0 bg-black/80 backdrop-blur-sm md:hidden"></div>
-    
+         
     <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[51]
-      bg-slate-800/95 backdrop-blur-md p-4 rounded-lg w-[90%] max-w-sm
-      md:static md:transform-none md:w-auto md:top-auto md:bg-slate-800 md:backdrop-blur-none md:z-auto">
-      
+              bg-slate-800/95 backdrop-blur-md p-4 rounded-lg w-[90%] max-w-sm
+              md:static md:transform-none md:w-auto md:top-auto md:bg-slate-800 md:backdrop-blur-none md:z-auto">
+             
       <!-- Fondo de galaxia (solo visible en móvil) -->
       <div class="absolute inset-0 -z-10 md:hidden overflow-hidden rounded-lg">
         <div class="star-background-modal">
-          <div class="stars-1"></div>
-          <div class="stars-2"></div>
-          <div class="stars-3"></div>
+          <div id="modalStars"></div>
+          <div id="modalStars2"></div>
+          <div id="modalStars3"></div>
+          <div class="shooting-star-modal right-to-left"></div>
+          <div class="shooting-star-modal top-to-bottom"></div>
         </div>
       </div>
-      
+             
       <!-- Flecha del tooltip (solo visible en desktop) -->
       <div class="hidden md:block absolute -top-2 left-4 w-4 h-4 rotate-45 bg-slate-800 border-l border-t border-slate-700"></div>
-      
+             
       <!-- Header con botón cerrar (solo visible en móvil) -->
       <div class="flex justify-end mb-4 md:hidden">
-        <button id="closeModal" class="text-gray-400 hover:text-white">&times;</button>
+        <button id="closeModal" class="text-gray-400 hover:text-white text-xl leading-none">&times;</button>
       </div>
-
+       
       <!-- Lista de aptitudes -->
-      <ul class="list-none space-y-2">
+      <ul class="list-none space-y-2 relative z-10">
         {aptitudes.map(aptitud => (
-          <li>{aptitud}</li>
+          <li class="text-white/90">{aptitud}</li>
         ))}
       </ul>
     </div>
@@ -58,8 +62,19 @@ const aptitudes = [
   const closeBtn = document.getElementById('closeModal');
 
   // Función para manejar la visibilidad del modal
-  const showModal = () => content?.classList.remove('hidden');
-  const hideModal = () => content?.classList.add('hidden');
+  const showModal = () => {
+    content?.classList.remove('hidden');
+    // Inicializar las estrellas del modal cuando se muestra
+    if (window.innerWidth < 768) {
+      initModalStars();
+    }
+  };
+  
+  const hideModal = () => {
+    content?.classList.add('hidden');
+    // Limpiar las animaciones del modal
+    clearModalStars();
+  };
 
   // Event listeners para el modal
   if (btn && content && closeBtn) {
@@ -78,52 +93,244 @@ const aptitudes = [
       }
     });
   }
+
+  // Función para inicializar las estrellas del modal
+  function initModalStars() {
+    const modalWidth = 300; // Ancho aproximado del modal
+    const modalHeight = 400; // Alto aproximado del modal
+    
+    // Generar estrellas para el modal
+    const smallStars = generateModalStars(100, modalWidth, modalHeight);
+    const mediumStars = generateModalStars(40, modalWidth, modalHeight);
+    const largeStars = generateModalStars(20, modalWidth, modalHeight);
+    
+    // Actualizar CSS custom properties para el modal
+    const root = document.documentElement;
+    root.style.setProperty('--modal-stars-small', smallStars);
+    root.style.setProperty('--modal-stars-medium', mediumStars);
+    root.style.setProperty('--modal-stars-large', largeStars);
+    
+    // Inicializar estrella fugaz del modal
+    initModalShootingStars();
+  }
+
+  function generateModalStars(count, maxWidth, maxHeight) {
+    const stars = [];
+    const extendedHeight = maxHeight * 2;
+    
+    for (let i = 0; i < count; i++) {
+      const x = Math.floor(Math.random() * maxWidth);
+      const y = Math.floor(Math.random() * extendedHeight) - Math.floor(extendedHeight / 2);
+      stars.push(`${x}px ${y}px #FFF`);
+    }
+    
+    return stars.join(', ');
+  }
+
+  function initModalShootingStars() {
+    const rightToLeft = document.querySelector('.shooting-star-modal.right-to-left');
+    const topToBottom = document.querySelector('.shooting-star-modal.top-to-bottom');
+
+    if (!rightToLeft || !topToBottom) return;
+
+    const duration = 3000;
+    const delay = 8000;
+
+    const animateSequence = () => {
+      animateModalShootingStar(rightToLeft, 'shootingStarModalRightToLeft', duration);
+      
+      setTimeout(() => {
+        animateModalShootingStar(topToBottom, 'shootingStarModalTopToBottom', duration);
+      }, delay);
+    };
+
+    // Iniciar la primera secuencia después de 500ms
+    setTimeout(animateSequence, 500);
+
+    // Repetir cada 30 segundos
+    setInterval(animateSequence, 30000);
+  }
+
+  function animateModalShootingStar(element, animationName, duration) {
+    if (element) {
+      element.style.animation = 'none';
+      element.offsetHeight; // Forzar reflow
+      element.style.animation = `${animationName} ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+    }
+  }
+
+  function clearModalStars() {
+    const shootingStars = document.querySelectorAll('.shooting-star-modal');
+    shootingStars.forEach(star => {
+      star.style.animation = 'none';
+    });
+  }
 </script>
 
 <style>
-.star-background-modal {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-  overflow: hidden;
-  border-radius: 0.5rem;
-}
-
-.stars-1, .stars-2, .stars-3 {
-  position: absolute;
-  inset: 0;
-}
-
-.stars-1 {
-  width: 1px;
-  height: 1px;
-  background: transparent;
-  box-shadow: var(--stars-shadow-1);
-  animation: animStarModal 50s linear infinite;
-}
-
-.stars-2 {
-  width: 2px;
-  height: 2px;
-  background: transparent;
-  box-shadow: var(--stars-shadow-2);
-  animation: animStarModal 100s linear infinite;
-}
-
-.stars-3 {
-  width: 3px;
-  height: 3px;
-  background: transparent;
-  box-shadow: var(--stars-shadow-3);
-  animation: animStarModal 150s linear infinite;
-}
-
-@keyframes animStarModal {
-  from {
-    transform: translateY(0px);
+  .star-background-modal {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    overflow: hidden;
+    border-radius: 0.5rem;
+    will-change: auto;
   }
-  to {
-    transform: translateY(-2000px);
+
+  :root {
+    --modal-stars-small: 
+      12px 15px #FFF, 45px 87px #FFF, 123px 45px #FFF, 134px 123px #FFF, 145px 67px #FFF,
+      156px 134px #FFF, 167px 89px #FFF, 178px 145px #FFF, 189px 123px #FFF, 190px 156px #FFF;
+    
+    --modal-stars-medium:
+      23px 134px #FFF, 145px 167px #FFF, 167px 123px #FFF, 189px 178px #FFF, 151px 134px #FFF;
+    
+    --modal-stars-large:
+      67px 145px #FFF, 189px 167px #FFF, 111px 123px #FFF;
   }
-}
+
+  #modalStars {
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: var(--modal-stars-small);
+    animation: animModalStar 50s linear infinite;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+
+  #modalStars:after {
+    content: " ";
+    position: absolute;
+    top: 800px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: var(--modal-stars-small);
+  }
+
+  #modalStars2 {
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: var(--modal-stars-medium);
+    animation: animModalStar 100s linear infinite;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+
+  #modalStars2:after {
+    content: " ";
+    position: absolute;
+    top: 800px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: var(--modal-stars-medium);
+  }
+
+  #modalStars3 {
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: var(--modal-stars-large);
+    animation: animModalStar 150s linear infinite;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+
+  #modalStars3:after {
+    content: " ";
+    position: absolute;
+    top: 800px;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: var(--modal-stars-large);
+  }
+
+  @keyframes animModalStar {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(0, -800px, 0);
+    }
+  }
+
+  .shooting-star-modal {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 8px #fff);
+    opacity: 0;
+    will-change: transform, opacity;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .shooting-star-modal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-100%);
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+  }
+
+  @keyframes shootingStarModalRightToLeft {
+    0% {
+      transform: translate3d(320px, 50px, 0) rotate(-15deg);
+      opacity: 0;
+    }
+    15% {
+      opacity: 1;
+    }
+    70% {
+      transform: translate3d(-50px, 150px, 0) rotate(-15deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(-50px, 150px, 0) rotate(-15deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes shootingStarModalTopToBottom {
+    0% {
+      transform: translate3d(100px, -50px, 0) rotate(45deg);
+      opacity: 0;
+    }
+    15% {
+      opacity: 1;
+    }
+    70% {
+      transform: translate3d(200px, 450px, 0) rotate(45deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(200px, 450px, 0) rotate(45deg);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #modalStars, #modalStars2, #modalStars3 {
+      animation-duration: 200s;
+    }
+    
+    .shooting-star-modal {
+      display: none;
+    }
+  }
+
+  /* Ocultar el fondo de galaxia en desktop */
+  @media (min-width: 768px) {
+    .star-background-modal {
+      display: none;
+    }
+  }
 </style>
