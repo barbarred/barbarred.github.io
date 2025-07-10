@@ -6,7 +6,7 @@ const aptitudes = [
   "SOLID",
   "TDD",
   "Six Sigma Green Belt",
-  "Prompt Engineer",
+  "Pront Engineer",
   "Scrum"
 ];
 ---
@@ -33,8 +33,7 @@ const aptitudes = [
           <div id="modalStars"></div>
           <div id="modalStars2"></div>
           <div id="modalStars3"></div>
-          <div class="shooting-star-modal right-to-left"></div>
-          <div class="shooting-star-modal top-to-bottom"></div>
+
         </div>
       </div>
              
@@ -72,8 +71,6 @@ const aptitudes = [
   
   const hideModal = () => {
     content?.classList.add('hidden');
-    // Limpiar las animaciones del modal
-    clearModalStars();
   };
 
   // Event listeners para el modal
@@ -100,9 +97,9 @@ const aptitudes = [
     const modalHeight = 400; // Alto aproximado del modal
     
     // Generar estrellas para el modal
-    const smallStars = generateModalStars(100, modalWidth, modalHeight);
-    const mediumStars = generateModalStars(40, modalWidth, modalHeight);
-    const largeStars = generateModalStars(20, modalWidth, modalHeight);
+    const smallStars = generateModalStars(150, modalWidth, modalHeight);
+    const mediumStars = generateModalStars(60, modalWidth, modalHeight);
+    const largeStars = generateModalStars(30, modalWidth, modalHeight);
     
     // Actualizar CSS custom properties para el modal
     const root = document.documentElement;
@@ -110,8 +107,7 @@ const aptitudes = [
     root.style.setProperty('--modal-stars-medium', mediumStars);
     root.style.setProperty('--modal-stars-large', largeStars);
     
-    // Inicializar estrella fugaz del modal
-    initModalShootingStars();
+
   }
 
   function generateModalStars(count: number, maxWidth: number, maxHeight: number) {
@@ -127,46 +123,7 @@ const aptitudes = [
     return stars.join(', ');
   }
 
-  function initModalShootingStars() {
-    const rightToLeft = document.querySelector('.shooting-star-modal.right-to-left') as HTMLElement;
-    const topToBottom = document.querySelector('.shooting-star-modal.top-to-bottom') as HTMLElement;
 
-    if (!rightToLeft || !topToBottom) return;
-
-    const duration = 3000;
-    const delay = 8000;
-
-    const animateSequence = () => {
-      animateModalShootingStar(rightToLeft, 'shootingStarModalRightToLeft', duration);
-      
-      setTimeout(() => {
-        animateModalShootingStar(topToBottom, 'shootingStarModalTopToBottom', duration);
-      }, delay);
-    };
-
-    // Iniciar la primera secuencia después de 500ms
-    setTimeout(animateSequence, 500);
-
-    // Repetir cada 30 segundos
-    setInterval(animateSequence, 30000);
-  }
-
-  function animateModalShootingStar(element: HTMLElement, animationName: string, duration: number) {
-    if (element) {
-      element.style.animation = 'none';
-      element.offsetHeight; // Forzar reflow
-      element.style.animation = `${animationName} ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`;
-    }
-  }
-
-  function clearModalStars() {
-    const shootingStars = document.querySelectorAll('.shooting-star-modal');
-    shootingStars.forEach(star => {
-      if (star instanceof HTMLElement) {
-        star.style.animation = 'none';
-      }
-    });
-  }
 </script>
 
 <style>
@@ -196,7 +153,7 @@ const aptitudes = [
     height: 1px;
     background: transparent;
     box-shadow: var(--modal-stars-small);
-    animation: animModalStar 50s linear infinite;
+    animation: animModalStar 60s linear infinite;
     transform: translate3d(0, 0, 0);
     will-change: transform;
   }
@@ -260,74 +217,7 @@ const aptitudes = [
     }
   }
 
-  .shooting-star-modal {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background-color: #fff;
-    border-radius: 50%;
-    filter: drop-shadow(0 0 8px #fff);
-    opacity: 0;
-    will-change: transform, opacity;
-    transform: translate3d(0, 0, 0);
-  }
 
-  .shooting-star-modal::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translateX(-100%);
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
-  }
-
-  @keyframes shootingStarModalRightToLeft {
-    0% {
-      transform: translate3d(320px, 50px, 0) rotate(-15deg);
-      opacity: 0;
-    }
-    15% {
-      opacity: 1;
-    }
-    70% {
-      transform: translate3d(-50px, 150px, 0) rotate(-15deg);
-      opacity: 1;
-    }
-    100% {
-      transform: translate3d(-50px, 150px, 0) rotate(-15deg);
-      opacity: 0;
-    }
-  }
-
-  @keyframes shootingStarModalTopToBottom {
-    0% {
-      transform: translate3d(100px, -50px, 0) rotate(45deg);
-      opacity: 0;
-    }
-    15% {
-      opacity: 1;
-    }
-    70% {
-      transform: translate3d(200px, 450px, 0) rotate(45deg);
-      opacity: 1;
-    }
-    100% {
-      transform: translate3d(200px, 450px, 0) rotate(45deg);
-      opacity: 0;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #modalStars, #modalStars2, #modalStars3 {
-      animation-duration: 200s;
-    }
-    
-    .shooting-star-modal {
-      display: none;
-    }
-  }
 
   /* Ocultar el fondo de galaxia en desktop */
   @media (min-width: 768px) {
