@@ -1,19 +1,22 @@
 ---
 const aptitudes = [
-  "Git/GitHub",
+  "Git",
+  "GitHub",
   "CI/CD",
-  "S.O.L.I.D",
+  "SOLID",
   "TDD",
-  "Six Sigma-green belt"
+  "Six Sigma Green Belt",
+  "Pront Engineer",
+  "Scrum"
 ];
 ---
 
 <div class="relative group">
-  <button class="cursor-pointer md:cursor-default font-semibold md:pointer-events-none" id="aptitudesBtn">Aptitudes</button>
+  <button class="cursor-pointer text-xs underline underline-offset-4 md:no-underline md:text-sm md:cursor-default font-semibold md:pointer-events-none" id="aptitudesBtn">Aptitudes y Fundamentos</button>
   
   <div id="aptitudesContent" 
     class="hidden absolute z-50 text-sm rounded-md
-    md:group-hover:block md:-left-2 md:top-8 md:min-w-[200px] md:pointer-events-none md:bg-slate-800 md:z-10">
+    md:group-hover:block md:-left-2 md:top-8 md:min-w-[250px] md:pointer-events-none md:bg-slate-800 md:z-10">
     
     <!-- Overlay para oscurecer el fondo (solo en móvil) -->
     <div class="fixed inset-0 bg-black/80 backdrop-blur-sm md:hidden"></div>
@@ -35,8 +38,7 @@ const aptitudes = [
       <div class="hidden md:block absolute -top-2 left-4 w-4 h-4 rotate-45 bg-slate-800 border-l border-t border-slate-700"></div>
       
       <!-- Header con botón cerrar (solo visible en móvil) -->
-      <div class="flex justify-between items-center mb-4 md:hidden">
-        <h3 class="font-semibold">Aptitudes</h3>
+      <div class="flex justify-end mb-4 md:hidden">
         <button id="closeModal" class="text-gray-400 hover:text-white">&times;</button>
       </div>
 
