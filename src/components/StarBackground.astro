@@ -308,7 +308,7 @@ class GalaxyOptimized {
     if (!rightToLeft || !topToBottom) return;
 
     const duration = 5000;
-    const delay = 4000;
+    const delay = 12000;
 
     const animateSequence = () => {
       this.animateShootingStar(rightToLeft, 'shootingStarRightToLeft', duration);
@@ -320,9 +320,9 @@ class GalaxyOptimized {
 
     // Iniciar la primera secuencia después de 1 segundo
     setTimeout(animateSequence, 1000);
-    
-    // Repetir cada 10 segundos
-    setInterval(animateSequence, 10000);
+
+    // Repetir cada 50 segundos
+    setInterval(animateSequence, 50000);
   }
 
   animateShootingStar(element: HTMLElement, animationName: string, duration: number) {
