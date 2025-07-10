@@ -9,7 +9,7 @@ export interface Prop{
     project: any
 }
 
-const { date, title, description, tecnologias, project} = Astro.props
+const { date, title, description, tecnologias, project, certificate} = Astro.props
 
 ---
 
@@ -23,6 +23,7 @@ const { date, title, description, tecnologias, project} = Astro.props
         <h3 class="text-base md:text-lg font-semibold text-gray-400 dark:text-white mt-4">{title}</h3>
         <p class="mt-2 mb-6 text-sm md:text-base font-normal text-white dark:text-gray-400">{description}</p>
         <p class="mt-2 mb-6 text-sm md:text-base font-normal text-white dark:text-gray-400"><ul>{project?.map((proj: { nameProject: any })=>( <proj.nameProject />))}</ul></p>
+        <p class="mt-2 mb-6 text-sm md:text-base font-normal text-white dark:text-gray-400"><ul>{certificate?.map((cert: { nameCertificado: any })=>( <cert.nameCertificado />))}</ul></p>
         <h3 class="text-xs md:text-sm font-semibold text-gray-400 mb-4">TECNOLOGÍAS</h3>
         <ul class="flex">
             {tecnologias?.map((tecno: { icono: any }) => (

@@ -25,6 +25,7 @@ import Sql from "./Icons/tecnologias/Sql.astro"
 import TypeScript from "./Icons/tecnologias/TypeScript.astro"
 import OpenIA from "./Icons/tecnologias/OpenIa.astro"
 import Project from "../components/Project.astro"
+import Certificado from "../components/Certificado.astro"
 import HP from "./Icons/tecnologias/Hp.astro"
 import Dell from "./Icons/tecnologias/Dell.astro"
 import TRESM from "./Icons/tecnologias/3m.astro"
@@ -131,12 +132,19 @@ const PROJECT = {
     },
 }
 
+const CERTIFICADO = {
+    certificado: {
+        nameCertificado: Certificado,
+    },
+}
+
 const EXPERIENCE = [
     {
         date: 'Periodo 2021 - Actualmente',
         title: 'JavaScript FullStack WebDev',
         description: 'En constante evolución como desarrollador web FullStack JavaScript, para seguir creando y aportando valor con las nuevas tecnologías que van surgiendo en la industria, y así asegurar aplicaciones web robustas y escalables en el tiempo.',
         tecnologias: [TECNOLOGIAS.JAVASCRIPT, TECNOLOGIAS.TYPESCRIPT, TECNOLOGIAS.REACT, TECNOLOGIAS.ASTRO, TECNOLOGIAS.VITE, TECNOLOGIAS.CSS, TECNOLOGIAS.TAILWIND, TECNOLOGIAS.NODE, TECNOLOGIAS.NPM, TECNOLOGIAS.GIT,TECNOLOGIAS.MYSQL, TECNOLOGIAS.SQL, TECNOLOGIAS.OPENIA],
+        certificate: [CERTIFICADO.certificado]
     },
     {
         date: 'Periodo 2019 - 2021',
