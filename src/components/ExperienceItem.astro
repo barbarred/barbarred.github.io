@@ -25,7 +25,10 @@ const { date, title, description, tecnologias, project, certificate} = Astro.pro
         <p class="mt-2 mb-6 text-sm md:text-base font-normal text-white dark:text-gray-400"><ul>{project?.map((proj: { nameProject: any })=>( <proj.nameProject />))}</ul></p>
         <p class="mt-2 mb-6 text-sm md:text-base font-normal text-white dark:text-gray-400"><ul>{certificate?.map((cert: { nameCertificado: any })=>( <cert.nameCertificado />))}</ul></p>
         <h3 class="text-xs md:text-sm font-semibold text-gray-400 mb-4">TECNOLOGÍAS</h3>
-        <ul class="flex">
+        <ul class="flex flex-wrap gap-x-2 gap-y-2 mb-6">
+            {
+                tecnologias?.length === 0 && <p class="text-sm text-gray-400">No hay tecnologías disponibles.</p>
+            }
             {tecnologias?.map((tecno: { icono: any }) => (
                 <li class="mr-2 md:mr-4" >
                     <tecno.icono class="size-5 md:size-6"/>
