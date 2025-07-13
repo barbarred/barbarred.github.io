@@ -1,71 +1,18 @@
-/*CLase que aplica los estilos al elemento a aparecer*/
-.show-element {
-  /*duracion de la animacion, puedes variar el tiempo, entre mas grande mas tarda el efecto*/
-  animation-duration: 2s;
-  animation-fill-mode: both;
-  /*le indicas que animacion quieres aplicarle, animacion hecha por ti en un keyframe*/
-  animation-name: fadeIn;
-  background-color: rgb(225, 225, 255);
+.twinkling-dot {
+  animation: twinkle 3s infinite;
 }
 
-.hide-element {
-  animation-duration: 2s;
-  animation-fill-mode: both;
-  animation-name: fadeOut;
-}
-
-/*KeyFrames*/
-/*La animacion hecha por ti, puedes ponerle cualquier nombre, solo es para identificarlo*/
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
+@keyframes twinkle {
+  0%, 100% {
+    background-color: #c1ff98; /* Verde */
+    box-shadow: 0 0 2px 1px rgba(76, 209, 55, 0.8);
   }
-  100% {
-    opacity: 1;
+  33% {
+    background-color: #efff95; /* Azul */
+    box-shadow: 0 0 3px 2px rgba(116, 252, 184, 0.8);
   }
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/*Puedes hacer mas animaciones personalizadas con todo lo que pueda hacer css*/
-@keyframes otherAnimation {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes animationTranslateIn {
-  from {
-    opacity: 0;
-    transform: translateX(-200px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-}
-
-@keyframes animationTranslateOut {
-  from {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-200px);
+  66% {
+    background-color: #f1c40f; /* Amarillo */
+    box-shadow: 0 0 3px 2px rgba(241, 196, 15, 0.8);
   }
 }
