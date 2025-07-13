@@ -10,7 +10,8 @@ import MailIcon from '../components/Icons/Mail.astro'
 import BriefCase from '../components/Icons/BriefCase.astro'
 import Experience from '../components/Experience.astro'
 import Aptitudes from '../components/Icons/Aptitudes.astro'
-import AptitudesTooltip from '../components/AptitudesTooltip.astro';
+import AptitudesTooltip from '../components/AptitudesTooltip.astro'
+import RocketIcon from '../components/Icons/RocketIcon.astro'
 
 
 ---
@@ -45,10 +46,24 @@ import AptitudesTooltip from '../components/AptitudesTooltip.astro';
 			</nav>
 		</SectionContainer>
 
+		<SectionContainer id="proyectos">
+			<div class="flex md:flex-row justify-between gap-x-16 md:gap-x-40">
+				<h2 class="text-xl md:text-2xl font-semibold flex gap-x-2 items-center mb-8">
+				<RocketIcon class="size-7"/>
+				Proyectos
+				</h2>
+				<div class="flex flex-col md:flex-row gap-x-2 text-sm">
+					<div class="font-semibold flex gap-x-2 items-center md:mb-8">
+						
+					</div>
+				</div>
+			</div>
+		</SectionContainer>
+
 		<SectionContainer id="experiencia">
 			<div class="flex md:flex-row justify-between gap-x-16 md:gap-x-40">
 				<h2 class="text-xl md:text-2xl font-semibold flex gap-x-2 items-center mb-8">
-				<BriefCase class="size-6"/>
+				<BriefCase class="size-7"/>
 				Experiencia
 				</h2>
 				<div class="flex flex-col md:flex-row gap-x-2 text-sm">
