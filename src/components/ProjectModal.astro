@@ -1,0 +1,206 @@
+---
+export interface Props {
+  id: string;
+  linkText: string;
+  linkUrl: string;
+  imageSrc: string;
+  imageAlt?: string;
+  modalWidth?: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+}
+
+const { 
+  id, 
+  linkText, 
+  linkUrl, 
+  imageSrc, 
+  imageAlt = "Modal Image",
+  modalWidth = "300px",
+  position = "bottom"
+} = Astro.props;
+const componentId = `image-modal-${id}`;
+const tooltipId = `image-tooltip-${id}`;
+const imgId = `image-${id}`;
+---
+
+<div class="relative group" data-image-component={id}>
+  <a 
+    href={linkUrl} 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    class="text-[#f8e38e] dark:text-blue-400 transition-colors text-sm font-normal"
+  >
+    {linkText}
+  </a>
+  
+  <div
+    id={tooltipId}
+    class={`hidden md:block md:absolute md:z-50 md:bg-transparent md:transition-opacity md:duration-150 ${
+      position === 'top' ? 'md:bottom-full md:mb-2 md:left-1/2 md:-translate-x-1/2' :
+      position === 'left' ? 'md:right-full md:mr-2 md:top-1/2 md:-translate-y-1/2' :
+      position === 'right' ? 'md:left-full md:ml-2 md:top-1/2 md:-translate-y-1/2' :
+      'md:top-full md:mt-2 md:left-1/2 md:-translate-x-1/2'
+    }`}
+    style={`width:${modalWidth}; min-width:${modalWidth}; max-width:${modalWidth}; opacity:0; pointer-events:none; visibility:hidden;`}
+  >
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2 transition-transform hover:scale-105">
+      <img
+        id={imgId}
+        alt={imageAlt}
+        class="rounded-lg w-full h-auto object-cover"
+        style="max-height:200px;"
+        src={imageSrc}
+      />
+    </div>
+  </div>
+</div>
+
+<script type="module" define:vars={{ id, tooltipId, imgId, imageSrc }}>
+(function() {
+  'use strict';
+  
+  const MODAL_KEY = `IMAGE_MODAL_${id}_INITIALIZED`;
+  
+  if (window[MODAL_KEY]) {
+    console.log(`[IMAGE MODAL] Modal ${id} ya inicializado, saltando...`);
+    return;
+  }
+  window[MODAL_KEY] = true;
+  console.log(`[IMAGE MODAL] Inicializando modal para ${id}`);
+
+  // Estado del modal
+  const MODAL_STATE = {
+    imagePreloaded: false,
+    isHoverActive: false,
+    isTooltipActive: false,
+    loadingPromise: null,
+    initialized: false
+  };
+
+  // Referencias DOM
+  let trigger = null;
+  let tooltip = null;
+  let imgElement = null;
+
+  function getDOMReferences() {
+    if (!trigger) trigger = document.querySelector(`[data-image-component="${id}"]`);
+    if (!tooltip) tooltip = document.getElementById(tooltipId);
+    if (!imgElement) imgElement = document.getElementById(imgId);
+    return trigger && tooltip && imgElement;
+  }
+
+  // Precarga la imagen
+  function preloadImage() {
+    if (MODAL_STATE.imagePreloaded || MODAL_STATE.loadingPromise) {
+      return MODAL_STATE.loadingPromise || Promise.resolve();
+    }
+    
+    console.log(`[IMAGE MODAL] Precargando imagen para ${id}`);
+    MODAL_STATE.loadingPromise = new Promise((resolve) => {
+      const tempImg = new window.Image();
+      tempImg.onload = function() {
+        MODAL_STATE.imagePreloaded = true;
+        console.log(`[IMAGE MODAL] Imagen precargada para ${id}`);
+        resolve();
+      };
+      tempImg.onerror = function(error) {
+        console.error(`[IMAGE MODAL] Error precargando imagen para ${id}:`, error);
+        resolve();
+      };
+      tempImg.src = imageSrc;
+    });
+    return MODAL_STATE.loadingPromise;
+  }
+
+  // Mostrar tooltip
+  async function showTooltip() {
+    if (window.innerWidth < 768) return;
+    if (!getDOMReferences()) return;
+    
+    console.log(`[IMAGE MODAL] Mostrando tooltip para ${id}`);
+    
+    await preloadImage();
+    
+    if (tooltip) {
+      tooltip.style.opacity = '1';
+      tooltip.style.pointerEvents = 'auto';
+      tooltip.style.visibility = 'visible';
+    }
+  }
+
+  // Ocultar tooltip
+  function hideTooltip() {
+    if (MODAL_STATE.isHoverActive || MODAL_STATE.isTooltipActive) return;
+    if (window.innerWidth < 768) return;
+    
+    if (tooltip) {
+      tooltip.style.opacity = '0';
+      tooltip.style.pointerEvents = 'none';
+      tooltip.style.visibility = 'hidden';
+    }
+  }
+
+  // Inicializar eventos
+  function initializeEvents() {
+    if (MODAL_STATE.initialized) return;
+    if (!getDOMReferences()) return;
+    
+    console.log(`[IMAGE MODAL] Inicializando eventos para ${id}`);
+    
+    if (trigger) {
+      trigger.addEventListener('mouseenter', function() {
+        MODAL_STATE.isHoverActive = true;
+        showTooltip();
+      });
+      
+      trigger.addEventListener('mouseleave', function() {
+        MODAL_STATE.isHoverActive = false;
+        setTimeout(hideTooltip, 100);
+      });
+    }
+    
+    if (tooltip) {
+      tooltip.addEventListener('mouseenter', function() {
+        MODAL_STATE.isTooltipActive = true;
+      });
+      
+      tooltip.addEventListener('mouseleave', function() {
+        MODAL_STATE.isTooltipActive = false;
+        setTimeout(hideTooltip, 100);
+      });
+    }
+    
+    MODAL_STATE.initialized = true;
+    
+    // Precargar imagen después de un delay
+    setTimeout(() => { preloadImage(); }, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeEvents);
+  } else {
+    initializeEvents();
+  }
+
+})();
+</script>
+
+<style>
+@media (min-width: 768px) {
+  [data-image-component] div[id*="image-tooltip-"] {
+    display: block;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

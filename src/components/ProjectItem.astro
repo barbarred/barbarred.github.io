@@ -1,0 +1,73 @@
+---
+import ProjectModal from './ProjectModal.astro';
+
+export interface Props {
+  projectId: string;
+  title: string;
+  description: string;
+  link?: string;
+  imageSrc?: string;
+  showImage?: boolean;
+  modalWidth?: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+}
+
+const {
+  projectId,
+  title,
+  description,
+  link,
+  imageSrc,
+  showImage = true,
+  modalWidth = "400px",
+  position = "right"
+} = Astro.props;
+
+// Determinar si mostrar el modal (necesita imagen y estar habilitado)
+const shouldShowModal = showImage && imageSrc;
+// URL del enlace
+const linkUrl = link || '#';
+---
+
+<li class="mb-14">
+  <div class="flex flex-row gap-x-3 items-center">
+    <div class="w-3 h-3 bg-[#44bd2e] rounded-full border border-white dark:border-gray-900 dark:bg-gray-700 twinkling-dot"></div>
+    
+    {shouldShowModal ? (
+      <!-- Si hay imagen, mostrar modal con hover -->
+      <ProjectModal 
+        id={projectId}
+        linkText={linkUrl}
+        linkUrl={linkUrl}
+        imageSrc={imageSrc}
+        imageAlt={`${title} - Project Image`}
+        modalWidth={modalWidth}
+        position={position}
+      />
+    ) : link ? (
+      <!-- Si no hay imagen pero hay link, mostrar enlace normal -->
+      <a 
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-[#f8e38e] dark:text-blue-400 transition-colors text-sm font-normal"
+      >
+        {title}
+      </a>
+    ) : (
+      <!-- Si no hay imagen ni link, mostrar solo texto -->
+      <span class="text-gray-500 dark:text-gray-400 text-sm font-normal">
+        {title}
+      </span>
+    )}
+  </div>
+  
+  <div class="md:ml-6">
+    <h3 class="text-base md:text-lg font-semibold text-gray-400 dark:text-white mt-4">
+      {title}
+    </h3>
+    <p class="mt-2 mb-6 text-sm md:text-base font-normal text-white dark:text-gray-400">
+      {description}
+    </p>
+  </div>
+</li>

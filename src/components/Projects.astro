@@ -1,4 +1,43 @@
 ---
+import ProjectItem from './ProjectItem.astro';
 
+const PROJECTS = [
+    {
+        projectId: 'react-galaxy-bg',
+        title: 'REACT GALAXY BG',
+        description: 'React Galaxy Background es un componente de React diseñado para añadir fondos animados que simulan una galaxia. Surgió de la implementacion de esta animación en mi propio portafolio, y lo he creado para que otros desarrolladores puedan integrarlo fácilmente en sus aplicaciones.',
+        link: 'https://www.npmjs.com/package/@r0rri/react-galaxy-bg',
+        imageSrc: '/images/react-galaxy-preview.png',
+    },
+    {
+        projectId: 'lunchies-mx',
+        title: 'LUNCHIES',
+        description: 'E-Commerce desarrollado para la marca mexicana de productos saludables Lunchies. Esta plataforma busca ofrecer a los clientes una experiencia de compra sencilla y eficiente para adquirir sus productos.',
+        link: 'https://www.lunchiesmx.com/',
+        imageSrc: '/images/lunchies-preview.png',
+    },
+    {
+        projectId: 'mpo-checklist',
+        title: 'MPO CHECKLIST',
+        description: `Aplicación desarrollada para digitalizar y optimizar el proceso de crear la lista de compras de los productos del inventario en la tienda Marquesas Po'. Su objetivo es centralizar la lista de compra y tener un mejor control y fácil acceso a la misma.`,
+        link: 'https://typewriter-shoplist.vercel.app/',
+        imageSrc: '/images/mpo-checklist-preview.png',
+    }
+];
 ---
 
+<div class="container mx-auto">
+    <ol>
+        {
+            PROJECTS.map((project) => (
+                <ProjectItem
+                    projectId={project.projectId}
+                    title={project.title}
+                    description={project.description}
+                    link={project.link}
+                    imageSrc={project.imageSrc}
+                />
+            ))
+        }
+    </ol>
+</div>
