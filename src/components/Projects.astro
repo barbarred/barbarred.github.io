@@ -6,28 +6,44 @@ const PROJECTS = [
         projectId: 'Finews-Journal',
         title: 'FINEWS',
         description: 'Una aplicación web moderna de diario financiero construida con Next.js, que muestra información en tiempo real sobre las mejores y peores acciones del día, junto con noticias del mercado financiero.',
-        link: 'https://finews.r0rri.com/',
+        link: {
+            href: 'https://finews.r0rri.com/',
+            target: '_blank',
+            rel: 'noopener noreferrer'
+        },
         imageSrc: '/images/finews-preview.webp',
     },
     {
         projectId: 'react-galaxy-bg',
         title: 'REACT GALAXY BG',
         description: 'React Galaxy Background es un componente de React diseñado para añadir fondos animados que simulan una galaxia. Surgió de la implementacion de esta animación en mi propio portafolio, y lo he creado para que otros desarrolladores puedan integrarlo fácilmente en sus aplicaciones.',
-        link: 'https://npmjs.com/package/@r0rri/react-galaxy-bg',
+        link: {
+            href: 'https://npmjs.com/package/@r0rri/react-galaxy-bg',
+            target: '_blank',
+            rel: 'noopener noreferrer'
+        },
         imageSrc: '/images/react-galaxy-preview.webp',
     },
     {
         projectId: 'lunchies-mx',
         title: 'LUNCHIES',
         description: 'E-Commerce desarrollado para la marca mexicana de productos saludables Lunchies. Esta plataforma busca ofrecer a los clientes una experiencia de compra sencilla y eficiente para adquirir sus productos.',
-        link: 'https://lunchiesmx.com/',
+        link: {
+            href: 'https://lunchiesmx.com/',
+            target: '_blank',
+            rel: 'noopener noreferrer'
+        },
         imageSrc: '/images/lunchies-preview.webp',
     },
     {
         projectId: 'mpo-checklist',
         title: 'MPO CHECKLIST',
         description: `Aplicación desarrollada para digitalizar y optimizar el proceso de crear la lista de compras de los productos del inventario en la tienda Marquesas Po'. Su objetivo es centralizar la lista de compra y tener un mejor control y fácil acceso a la misma.`,
-        link: 'https://listasuper.r0rri.com/',
+        link: {
+            href: 'https://listasuper.r0rri.com/',
+            target: '_blank',
+            rel: 'noopener noreferrer'
+        },
         imageSrc: '/images/mpo-checklist-preview.webp',
     }
 ];
@@ -41,7 +57,7 @@ const PROJECTS = [
                     projectId={project.projectId}
                     title={project.title}
                     description={project.description}
-                    link={project.link}
+                    link={project.link.href}
                     imageSrc={project.imageSrc}
                 />
             ))
